@@ -1,19 +1,26 @@
-// import logo from './images/polly.png';
-
-// <div className="hero">
-//     <div className="hero-body">
-//         <div className="container">
-//             <figure className="image" style={{ maxWidth: '128px' }}>
-//                 <img src={logo} alt="Polly"></img>
-//             </figure>
-//             <button className="button is-primary">Login</button>
-//             <button className="button">Register</button>
-//         </div>
-//     </div>
-// </div>;
+import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../../images/polly.png';
+import './navBar.css';
 
 const NavBar = () => {
-    return 'NavBar';
+    return (
+        <div className="hero">
+            <div className="hero-body">
+                <div className="container">
+                    <img src={logo} alt="Polly" className="logo"></img>
+                    <span className="navbar-buttons">
+                        <Link to="/login">
+                            <button className="button is-primary">Login</button>
+                        </Link>
+                        <Link to="/register">
+                            <button className="button">Register</button>
+                        </Link>
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default NavBar;
