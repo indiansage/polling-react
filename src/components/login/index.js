@@ -10,9 +10,9 @@ const Login = () => {
     const [submitted, setSubmitted] = useState(false);
     const { username, password } = inputs;
     const dispatch = useDispatch();
+
     function handleChange(e) {
-        const { name, value } = e.target;
-        setInputs((inputs) => ({ ...inputs, [name]: value }));
+        setInputs((inputs) => ({ ...inputs, [e.target.name]: e.target.value }));
     }
 
     function handleSubmit(e) {
