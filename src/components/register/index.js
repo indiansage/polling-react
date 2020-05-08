@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { userActions } from '../../actions/userActions';
 
 const Register = () => {
     const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
         username: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
     });
     const [submitted, setSubmitted] = useState(false);
-    //const registering = useSelector((state) => state.registration.registering);
+    const registering = useSelector((state) => state.registration.registering);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     // reset login status
     useEffect(() => {
@@ -29,8 +30,13 @@ const Register = () => {
         e.preventDefault();
 
         setSubmitted(true);
-        if (user.firstName && user.lastName && user.username && user.password) {
-            dispatch(userActions.register(user));
+        if (
+            user.username &&
+            user.password &&
+            user.confirmPassword &&
+            user.password === user.confirmPassword
+        ) {
+            dispatch(userActions.register(user, history));
         }
     }
 
@@ -42,36 +48,6 @@ const Register = () => {
                     <br />
                     <form onSubmit={handleSubmit}>
                         <div className="field">
-                            <label className="label">First Name</label>
-                            <div className="control">
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    className="input"
-                                    value={user.firstName}
-                                    onChange={handleChange}
-                                />
-                                {submitted && !user.firstName && (
-                                    <div>First Name is required</div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="field">
-                            <label className="label">Last Name</label>
-                            <div className="control">
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    className="input"
-                                    value={user.lastName}
-                                    onChange={handleChange}
-                                />
-                                {submitted && !user.lastName && (
-                                    <div>Last Name is required</div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="field">
                             <label className="label">Username</label>
                             <div className="control">
                                 <input
@@ -82,7 +58,9 @@ const Register = () => {
                                     onChange={handleChange}
                                 />
                                 {submitted && !user.username && (
-                                    <div>Username is required</div>
+                                    <p className="help is-danger">
+                                        Username is required
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -96,17 +74,47 @@ const Register = () => {
                                 onChange={handleChange}
                             />
                             {submitted && !user.password && (
-                                <div>Password is required</div>
+                                <p className="help is-danger">
+                                    Password is required
+                                </p>
                             )}
+                        </div>
+                        <div className="field">
+                            <label className="label">Confirm Password</label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                className="input"
+                                value={user.confirmPassword}
+                                onChange={handleChange}
+                            />
+                            {submitted &&
+                                (!user.confirmPassword ||
+                                    user.password !== user.confirmPassword) && (
+                                    <p className="help is-danger">
+                                        Passwords do not match
+                                    </p>
+                                )}
                         </div>
                         <div className="field is-grouped">
                             <div className="control">
-                                <button className="button is-link">
+                                <button
+                                    className={
+                                        'button is-link' +
+                                        (registering ? ' is-loading' : '')
+                                    }
+                                >
                                     Register
                                 </button>
                             </div>
                             <div className="control">
-                                <button className="button is-link is-light">
+                                <button
+                                    className="button is-link is-light"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        history.push('/');
+                                    }}
+                                >
                                     Cancel
                                 </button>
                             </div>

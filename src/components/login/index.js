@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../actions/userActions';
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
     const [inputs, setInputs] = useState({
@@ -10,6 +11,7 @@ const Login = () => {
     const [submitted, setSubmitted] = useState(false);
     const { username, password } = inputs;
     const dispatch = useDispatch();
+    const history = useHistory();
 
     function handleChange(e) {
         const { name, value } = e.target;

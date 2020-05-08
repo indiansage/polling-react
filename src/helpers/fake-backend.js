@@ -1,5 +1,6 @@
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let polls = JSON.parse(localStorage.getItem('polls')) || [];
 
 export function configureFakeBackend() {
     let realFetch = window.fetch;
@@ -9,7 +10,7 @@ export function configureFakeBackend() {
 
         return new Promise((resolve, reject) => {
             // wrap in timeout to simulate server api call
-            setTimeout(handleRoute, 500);
+            setTimeout(handleRoute, 5000);
 
             function handleRoute() {
                 switch (true) {
@@ -51,7 +52,7 @@ export function configureFakeBackend() {
                 const user = body;
 
                 if (users.find((x) => x.username === user.username)) {
-                    return error(`Username  ${user.username} is already taken`);
+                    return error(`Username ${user.username} is already taken`);
                 }
 
                 // assign user id and a few other properties then save

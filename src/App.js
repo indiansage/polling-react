@@ -15,6 +15,7 @@ import Login from './components/login';
 import Welcome from './components/welcomePage';
 import Register from './components/register';
 import NavBar from './components/navBar';
+import Alerts from './components/alerts';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
             <Router history={history}>
                 <div className="container">
                     <NavBar />
+                    <Alerts />
                     <Switch>
                         <Route exact path="/" component={Welcome} />
                         <Route exact path="/login" component={Login} />

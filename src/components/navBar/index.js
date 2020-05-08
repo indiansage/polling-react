@@ -1,26 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../images/polly.png';
 
 const NavBar = () => {
     return (
-        // <div className="container">
-        //     <div className="columns">
-        //         <div className="column">
-        //
-        //         </div>
-        //         <div className="column">
-        //             <Link to="/login">
-        //                 <button className="button is-primary">Login</button>
-        //             </Link>
-        //         </div>
-        //         <div className="column">
-        //             <Link to="/register">
-        //                 <button className="button">Register</button>
-        //             </Link>
-        //         </div>
-        //     </div>
-        // </div>
         <nav className="navbar">
             <div className="container">
                 <div className="navbar-brand">
