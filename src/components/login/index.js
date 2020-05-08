@@ -12,7 +12,8 @@ const Login = () => {
     const dispatch = useDispatch();
 
     function handleChange(e) {
-        setInputs((inputs) => ({ ...inputs, [e.target.name]: e.target.value }));
+        const { name, value } = e.target;
+        setInputs((inputs) => ({ ...inputs, [name]: value }));
     }
 
     function handleSubmit(e) {
@@ -24,37 +25,59 @@ const Login = () => {
         }
     }
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={handleChange}
-                    />
-                    {submitted && !username && (
-                        <div className="invalid-feedback">
-                            Username is required
+        <div className="columns">
+            <div className="column is-offset-4 is-4">
+                <div className="box">
+                    <h2 className="is-size-3">Login</h2>
+                    <br />
+                    <form onSubmit={handleSubmit}>
+                        <div className="field">
+                            <label className="label">Username</label>
+                            <div className="control">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    value={username}
+                                    onChange={handleChange}
+                                    className="input"
+                                />
+                                {submitted && !username && (
+                                    <div className="invalid-feedback">
+                                        Username is required
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
+                        <div className="field">
+                            <label className="label">Password</label>
+                            <div className="control">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    onChange={handleChange}
+                                    className="input"
+                                />
+                                {submitted && !password && (
+                                    <div>Password is required</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="field is-grouped">
+                            <div className="control">
+                                <button className="button is-link">
+                                    Login
+                                </button>
+                            </div>
+                            <div className="control">
+                                <button className="button is-link is-light">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={handleChange}
-                    />
-                    {submitted && !password && <div>Password is required</div>}
-                </div>
-                <div>
-                    <button>Login</button>
-                </div>
-            </form>
+            </div>
         </div>
     );
 };

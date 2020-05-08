@@ -35,62 +35,85 @@ const Register = () => {
     }
 
     return (
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>First Name</label>
-                    <input
-                        type="text"
-                        name="firstName"
-                        value={user.firstName}
-                        onChange={handleChange}
-                    />
-                    {submitted && !user.firstName && (
-                        <div>First Name is required</div>
-                    )}
+        <div className="columns">
+            <div className="column is-offset-4 is-4">
+                <div className="box">
+                    <h2 className="is-size-3">Register</h2>
+                    <br />
+                    <form onSubmit={handleSubmit}>
+                        <div className="field">
+                            <label className="label">First Name</label>
+                            <div className="control">
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    className="input"
+                                    value={user.firstName}
+                                    onChange={handleChange}
+                                />
+                                {submitted && !user.firstName && (
+                                    <div>First Name is required</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Last Name</label>
+                            <div className="control">
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    className="input"
+                                    value={user.lastName}
+                                    onChange={handleChange}
+                                />
+                                {submitted && !user.lastName && (
+                                    <div>Last Name is required</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Username</label>
+                            <div className="control">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    className="input"
+                                    value={user.username}
+                                    onChange={handleChange}
+                                />
+                                {submitted && !user.username && (
+                                    <div>Username is required</div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                className="input"
+                                value={user.password}
+                                onChange={handleChange}
+                            />
+                            {submitted && !user.password && (
+                                <div>Password is required</div>
+                            )}
+                        </div>
+                        <div className="field is-grouped">
+                            <div className="control">
+                                <button className="button is-link">
+                                    Register
+                                </button>
+                            </div>
+                            <div className="control">
+                                <button className="button is-link is-light">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <label>Last Name</label>
-                    <input
-                        type="text"
-                        name="lastName"
-                        value={user.lastName}
-                        onChange={handleChange}
-                    />
-                    {submitted && !user.lastName && (
-                        <div>Last Name is required</div>
-                    )}
-                </div>
-                <div>
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="username"
-                        value={user.username}
-                        onChange={handleChange}
-                    />
-                    {submitted && !user.username && (
-                        <div>Username is required</div>
-                    )}
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={user.password}
-                        onChange={handleChange}
-                    />
-                    {submitted && !user.password && (
-                        <div>Password is required</div>
-                    )}
-                </div>
-                <div>
-                    <button>Register</button>
-                    <Link to="/">Cancel</Link>
-                </div>
-            </form>
+            </div>
         </div>
     );
 };
