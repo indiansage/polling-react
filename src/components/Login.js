@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions } from '../actions/userActions';
 import { useHistory } from 'react-router-dom';
@@ -15,6 +15,11 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const history = useHistory();
+
+    // reset login status
+    useEffect(() => {
+        dispatch(userActions.logout());
+    }, []);
 
     function handleChange(e) {
         const { name, value } = e.target;
