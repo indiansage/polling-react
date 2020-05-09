@@ -21,4 +21,4 @@ export const constants = {
     DELETE_FAILURE: 'USERS_DELETE_FAILURE'
 };
 
-export const apiUrl = '';
+export const apiUrl = 'http://www.localhost:4000';

@@ -11,11 +11,13 @@ import './sass/main.sass';
 import history from './helpers/history';
 import configureStore from './helpers/store';
 
-import Login from './components/login';
-import Welcome from './components/welcomePage';
-import Register from './components/register';
-import NavBar from './components/navBar';
-import Alerts from './components/alerts';
+import Login from './components/Login';
+import Welcome from './components/WelcomePage';
+import Register from './components/Register';
+import NavBar from './components/NavBar';
+import Alerts from './components/Alerts';
+import Home from './components/Home';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
@@ -25,9 +27,10 @@ function App() {
                     <NavBar />
                     <Alerts />
                     <Switch>
-                        <Route exact path="/" component={Welcome} />
+                        <Route exact path="/welcome" component={Welcome} />
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/register" component={Register} />
+                        <PrivateRoute exact path="/" component={Home} />
                         <Redirect from="*" to="/" />
                     </Switch>
                 </div>

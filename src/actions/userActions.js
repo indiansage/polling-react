@@ -3,12 +3,45 @@ import { userService } from '../services/userService';
 import { alertActions } from './alertActions';
 
 export const userActions = {
+    register,
     login,
     logout,
-    register,
     getAll,
     delete: _delete
 };
+function register(user, history) {
+    let userDetails = {
+        username: user.username,
+        password: user.password,
+        isAdmin: false
+    };
+
+    return (dispatch) => {
+        dispatch(request(userDetails));
+
+        userService.register(userDetails).then(
+            (userDetails) => {
+                dispatch(success());
+                history.push('/login');
+                dispatch(alertActions.success('Registration successful'));
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
+
+    function request(user) {
+        return { type: constants.REGISTER_REQUEST, user };
+    }
+    function success(user) {
+        return { type: constants.REGISTER_SUCCESS, user };
+    }
+    function failure(error) {
+        return { type: constants.REGISTER_FAILURE, error };
+    }
+}
 
 function login(username, password, history) {
     return (dispatch) => {
@@ -40,34 +73,6 @@ function login(username, password, history) {
 function logout() {
     userService.logout();
     return { type: constants.LOGOUT };
-}
-
-function register(user, history) {
-    return (dispatch) => {
-        dispatch(request(user));
-
-        userService.register(user).then(
-            (user) => {
-                dispatch(success());
-                history.push('/login');
-                dispatch(alertActions.success('Registration successful'));
-            },
-            (error) => {
-                dispatch(failure(error.toString()));
-                dispatch(alertActions.error(error.toString()));
-            }
-        );
-    };
-
-    function request(user) {
-        return { type: constants.REGISTER_REQUEST, user };
-    }
-    function success(user) {
-        return { type: constants.REGISTER_SUCCESS, user };
-    }
-    function failure(error) {
-        return { type: constants.REGISTER_FAILURE, error };
-    }
 }
 
 function getAll() {

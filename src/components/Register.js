@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { userActions } from '../../actions/userActions';
+import { userActions } from '../actions/userActions';
 
 const Register = () => {
     const [user, setUser] = useState({
@@ -89,8 +89,7 @@ const Register = () => {
                                 onChange={handleChange}
                             />
                             {submitted &&
-                                (!user.confirmPassword ||
-                                    user.password !== user.confirmPassword) && (
+                                user.password !== user.confirmPassword && (
                                     <p className="help is-danger">
                                         Passwords do not match
                                     </p>
@@ -112,7 +111,7 @@ const Register = () => {
                                     className="button is-link is-light"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        history.push('/');
+                                        history.push('/welcome');
                                     }}
                                 >
                                     Cancel

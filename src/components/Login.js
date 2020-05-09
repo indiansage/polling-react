@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { userActions } from '../../actions/userActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../actions/userActions';
 import { useHistory } from 'react-router-dom';
 
 const Login = () => {
@@ -10,6 +10,9 @@ const Login = () => {
     });
     const [submitted, setSubmitted] = useState(false);
     const { username, password } = inputs;
+
+    const loggingIn = useSelector((state) => state.authentication.loggingIn);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -23,7 +26,7 @@ const Login = () => {
 
         setSubmitted(true);
         if (username && password) {
-            dispatch(userActions.login(username, password));
+            dispatch(userActions.login(username, password, history));
         }
     }
     return (
@@ -44,9 +47,9 @@ const Login = () => {
                                     className="input"
                                 />
                                 {submitted && !username && (
-                                    <div className="invalid-feedback">
+                                    <p className="help is-danger">
                                         Username is required
-                                    </div>
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -61,18 +64,31 @@ const Login = () => {
                                     className="input"
                                 />
                                 {submitted && !password && (
-                                    <div>Password is required</div>
+                                    <p className="help is-danger">
+                                        Password is required
+                                    </p>
                                 )}
                             </div>
                         </div>
                         <div className="field is-grouped">
                             <div className="control">
-                                <button className="button is-link">
+                                <button
+                                    className={
+                                        'button is-link' +
+                                        (loggingIn ? ' is-loading' : '')
+                                    }
+                                >
                                     Login
                                 </button>
                             </div>
                             <div className="control">
-                                <button className="button is-link is-light">
+                                <button
+                                    className="button is-link is-light"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        history.push('/welcome');
+                                    }}
+                                >
                                     Cancel
                                 </button>
                             </div>
