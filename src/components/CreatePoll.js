@@ -1,38 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { pollActions } from '../actions/pollActions';
 
 const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
-    const [inputs, setInputs] = useState({
-        question: '',
-        options: ['', '']
-    });
+    const [question, setQuestion] = useState('');
+    const [options, setOptions] = useState(['', '']);
+
     const [submitted, setSubmitted] = useState(false);
-    const { question, options } = inputs;
 
     const creating = useSelector((state) => state.authentication.loggingIn);
-
     const dispatch = useDispatch();
 
-    function handleChange(e) {
-        const { name, value } = e.target;
-        setInputs((inputs) => ({ ...inputs, [name]: value }));
+    function addOption(e) {
+        e.preventDefault();
+        setOptions([...options, '']);
+    }
+
+    function removeOption(e) {
+        e.preventDefault();
+        const updatedOptions = [...options];
+        updatedOptions.pop();
+        setOptions(updatedOptions);
+    }
+
+    function handleChangeQuestion(e) {
+        setQuestion(e.target.value);
     }
 
     function handleChangeOptions(e) {
-        const { name, value } = e.target;
-        setInputs((inputs) => ({ ...inputs, [name]: value }));
+        const updatedOptions = [...options];
+
+        const splitName = e.target.name.split('-');
+        const index = splitName[splitName.length - 1];
+        updatedOptions[index] = e.target.value;
+
+        setOptions(updatedOptions);
     }
 
     function handleSubmit(e) {
         e.preventDefault();
 
         setSubmitted(true);
-        if (question && options[0] && options[1]) {
+        if (question) {
             dispatch(pollActions.create(question, options));
         }
     }
+
     return (
         <div className={'modal' + (createPollModal ? ' is-active' : '')}>
             <div className="modal-background" />
@@ -48,7 +62,7 @@ const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
                                 <textarea
                                     name="question"
                                     value={question}
-                                    onChange={handleChange}
+                                    onChange={handleChangeQuestion}
                                     className="textarea"
                                 />
                                 {submitted && !question && (
@@ -58,39 +72,45 @@ const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
                                 )}
                             </div>
                         </div>
-                        <div className="field">
-                            <label className="label">Option 1</label>
-                            <div className="control">
-                                <input
-                                    type="text"
-                                    name="option0"
-                                    value={options[0]}
-                                    onChange={handleChangeOptions}
-                                    className="input"
-                                />
-                                {submitted && !options[0] && (
-                                    <p className="help is-danger">
-                                        Option 1 is required
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="field">
-                            <label className="label">Option 2</label>
-                            <div className="control">
-                                <input
-                                    type="text"
-                                    name="option1"
-                                    value={options[1]}
-                                    onChange={handleChangeOptions}
-                                    className="input"
-                                />
-                                {submitted && !options[1] && (
-                                    <p className="help is-danger">
-                                        Option 2 is required
-                                    </p>
-                                )}
-                            </div>
+                        {options.map((val, index) => {
+                            const optionId = `option-${index}`;
+                            return (
+                                <div className="field" key={optionId}>
+                                    <label className="label">{`Option ${
+                                        index + 1
+                                    }`}</label>
+                                    <input
+                                        type="text"
+                                        name={optionId}
+                                        className="input"
+                                        onChange={handleChangeOptions}
+                                    />
+                                    {submitted && !options[index] && (
+                                        <p className="help is-danger">
+                                            {`Option ${index + 1} is required`}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })}
+                        <div className="buttons is-pulled-right">
+                            <button
+                                className="button is-primary"
+                                onClick={addOption}
+                            >
+                                <span className="icon">
+                                    <i className="fas fa-plus"></i>
+                                </span>
+                            </button>
+                            <button
+                                className="button is-primary"
+                                onClick={removeOption}
+                                disabled={options.length < 3}
+                            >
+                                <span className="icon">
+                                    <i className="fas fa-minus"></i>
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </section>

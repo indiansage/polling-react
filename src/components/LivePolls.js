@@ -53,11 +53,14 @@ const LivePolls = () => {
                             )}
                         </div>
                         {polls.loading && (
-                            <progress class="progress is-primary" max="100" />
+                            <progress
+                                className="progress is-primary"
+                                max="100"
+                            />
                         )}
                         {!polls.loading && livePolls && livePolls.length === 0 && (
                             <h2 className="subtitle has-text-centered">
-                                <span>None found </span>
+                                <span>No polls found </span>
                                 <span className="icon">
                                     <i className="fas fa-thumbs-down" />
                                 </span>

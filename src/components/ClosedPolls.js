@@ -10,13 +10,13 @@ const ClosedPolls = () => {
                 <div className="container">
                     <h1 className="title has-text-centered-mobile">Closed</h1>
                     {polls.loading && (
-                        <progress class="progress is-primary" max="100" />
+                        <progress className="progress is-primary" max="100" />
                     )}
                     {!polls.loading && closedPolls && closedPolls.length === 0 && (
                         <>
                             <br />
                             <h2 className="subtitle has-text-centered">
-                                <span>None found </span>
+                                <span>No polls found </span>
                                 <span className="icon">
                                     <i className="fas fa-thumbs-down" />
                                 </span>
