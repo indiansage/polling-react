@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userActions } from '../actions/userActions';
 import { useHistory } from 'react-router-dom';
+
+import { userActions } from '../actions/userActions';
 
 const Login = () => {
     const [inputs, setInputs] = useState({

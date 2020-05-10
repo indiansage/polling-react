@@ -6,6 +6,7 @@ import {
     Route,
     Redirect
 } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import './sass/main.sass';
 import history from './helpers/history';

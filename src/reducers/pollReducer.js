@@ -7,8 +7,11 @@ export function polls(state = {}, action) {
                 loading: true
             };
         case constants.POLLS_GETALL_SUCCESS:
+            const livePolls = action.polls.filter((poll) => poll.live);
+            const closedPolls = action.polls.filter((poll) => !poll.live);
             return {
-                items: action.polls
+                livePolls,
+                closedPolls
             };
         case constants.POLLS_GETALL_FAILURE:
             return {
