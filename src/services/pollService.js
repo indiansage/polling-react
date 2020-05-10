@@ -3,7 +3,8 @@ import { authHeader } from '../helpers/auth-header';
 import { userService } from './userService';
 
 export const pollService = {
-    getAll
+    getAll,
+    create
 };
 
 //helper function
@@ -32,4 +33,14 @@ function getAll() {
     };
 
     return fetch(`${apiUrl}/polls`, requestOptions).then(handleResponse);
+}
+
+function create(poll) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify(poll)
+    };
+
+    return fetch(`${apiUrl}/polls/create`, requestOptions).then(handleResponse);
 }

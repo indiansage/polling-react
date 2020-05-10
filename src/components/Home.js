@@ -18,15 +18,15 @@ const Home = () => {
         <>
             <LivePolls />
             {user.isAdmin && <ClosedPolls />}
-            <section className="section">
+            {/* <section className="section">
                 <div className="container">
                     <div className="columns is-multiline">
-                        {/* {users.error && (
+                        {users.error && (
                 <span className="text-danger">ERROR: {users.error}</span>
-            )} */}
+            )}
                     </div>
                 </div>
-            </section>
+            </section> */}
         </>
     );
 };

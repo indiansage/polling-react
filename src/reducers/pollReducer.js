@@ -1,21 +1,27 @@
 import { constants } from '../constants';
 
-export function polls(state = {}, action) {
+const initialState = { showCreatePollModal: false };
+
+export function polls(state = initialState, action) {
     switch (action.type) {
         case constants.POLLS_GETALL_REQUEST:
-            return {
-                loading: true
-            };
+            return { ...state, loading: true };
         case constants.POLLS_GETALL_SUCCESS:
             const livePolls = action.polls.filter((poll) => poll.live);
             const closedPolls = action.polls.filter((poll) => !poll.live);
-            return {
-                livePolls,
-                closedPolls
-            };
+            return { ...state, loading: false, livePolls, closedPolls };
         case constants.POLLS_GETALL_FAILURE:
+            return { ...state, loading: false, error: action.error };
+        case constants.POLLS_CREATE_REQUEST:
+            return { ...state, creating: true };
+        case constants.POLLS_CREATE_SUCCESS:
+            return { ...state, creating: false };
+        case constants.POLLS_CREATE_FAILURE:
+            return { ...state, creating: false, error: action.error };
+        case constants.TOGGLE_CREATE_POLL_MODAL:
             return {
-                error: action.error
+                ...state,
+                showCreatePollModal: !state.showCreatePollModal
             };
         // case constants.DELETE_REQUEST:
         //     // add 'deleting:true' property to user being deleted

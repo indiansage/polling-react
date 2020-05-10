@@ -1,10 +1,11 @@
 import { constants } from '../constants';
 import { pollService } from '../services/pollService';
-//import { alertActions } from './alertActions';
+import { alertActions } from './alertActions';
 
 export const pollActions = {
-    getAllPolls
-    //createPoll
+    getAllPolls,
+    createPoll,
+    toggleCreatePollModal
 };
 
 function getAllPolls() {
@@ -13,7 +14,10 @@ function getAllPolls() {
 
         pollService.getAll().then(
             (polls) => dispatch(success(polls)),
-            (error) => dispatch(failure(error.toString()))
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
         );
     };
 
@@ -28,36 +32,35 @@ function getAllPolls() {
     }
 }
 
-// function createPoll(poll, history) {
-//     let poll = {
-//         username: user.username,
-//         password: user.password,
-//         isAdmin: false
-//     };
+function createPoll(poll) {
+    poll.live = true;
+    return (dispatch) => {
+        dispatch(request());
+        pollService.create(poll).then(
+            () => {
+                dispatch(success());
+                dispatch(toggleCreatePollModal());
+                dispatch(alertActions.success('Creation of poll successful'));
+                dispatch(getAllPolls());
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
 
-//     return (dispatch) => {
-//         dispatch(request(userDetails));
+    function request() {
+        return { type: constants.POLLS_CREATE_REQUEST };
+    }
+    function success() {
+        return { type: constants.POLLS_CREATE_SUCCESS };
+    }
+    function failure(error) {
+        return { type: constants.POLLS_CREATE_FAILURE, error };
+    }
+}
 
-//         userService.register(userDetails).then(
-//             (userDetails) => {
-//                 dispatch(success());
-//                 history.push('/login');
-//                 dispatch(alertActions.success('Registration successful'));
-//             },
-//             (error) => {
-//                 dispatch(failure(error.toString()));
-//                 dispatch(alertActions.error(error.toString()));
-//             }
-//         );
-//     };
-
-//     function request(user) {
-//         return { type: constants.REGISTER_REQUEST, user };
-//     }
-//     function success(user) {
-//         return { type: constants.REGISTER_SUCCESS, user };
-//     }
-//     function failure(error) {
-//         return { type: constants.REGISTER_FAILURE, error };
-//     }
-// }
+function toggleCreatePollModal() {
+    return { type: constants.TOGGLE_CREATE_POLL_MODAL };
+}

@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { pollActions } from '../actions/pollActions';
 import CreatePoll from './CreatePoll';
 
 const LivePolls = () => {
     const user = useSelector((state) => state.authentication.user);
     const polls = useSelector((state) => state.polls);
     const { livePolls } = polls;
-    const [createPollModal, setCreatePollModal] = useState(false);
+    //const [createPollModal, setCreatePollModal] = useState(false);
+
+    const dispatch = useDispatch();
 
     const handleCreatePollClick = (e) => {
         e.preventDefault();
-        setCreatePollModal(true);
-    };
-
-    const handleCreatePollClose = (e) => {
-        e.preventDefault();
-        setCreatePollModal(false);
+        dispatch(pollActions.toggleCreatePollModal());
     };
 
     return (
         <>
             {' '}
-            <CreatePoll
-                createPollModal={createPollModal}
-                handleCreatePollClose={handleCreatePollClose}
-            />
+            <CreatePoll />
             <section className="section">
                 <div className="box">
                     <div className="container">

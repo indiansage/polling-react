@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { pollActions } from '../actions/pollActions';
 
-const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
+const CreatePoll = () => {
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '']);
 
     const [submitted, setSubmitted] = useState(false);
 
-    const creating = useSelector((state) => state.authentication.loggingIn);
+    const creating = useSelector((state) => state.polls.creating);
+    const showCreatePollModal = useSelector(
+        (state) => state.polls.showCreatePollModal
+    );
     const dispatch = useDispatch();
+    //const history = useHistory();
 
     function addOption(e) {
         e.preventDefault();
@@ -40,15 +45,17 @@ const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
 
     function handleSubmit(e) {
         e.preventDefault();
+        const poll = { question, options };
 
         setSubmitted(true);
-        if (question) {
-            dispatch(pollActions.create(question, options));
+        if (question && options.every((val) => val)) {
+            dispatch(pollActions.createPoll(poll));
+            console.log('done');
         }
     }
 
     return (
-        <div className={'modal' + (createPollModal ? ' is-active' : '')}>
+        <div className={'modal' + (showCreatePollModal ? ' is-active' : '')}>
             <div className="modal-background" />
             <div className="modal-card">
                 <header className="modal-card-head">
@@ -120,13 +127,19 @@ const CreatePoll = ({ createPollModal, handleCreatePollClose }) => {
                             'button is-primary' +
                             (creating ? ' is-loading' : '')
                         }
+                        onClick={handleSubmit}
                     >
                         <span>Create</span>
                         <span className="icon">
                             <i className="fas fa-check" />
                         </span>
                     </button>
-                    <button className="button" onClick={handleCreatePollClose}>
+                    <button
+                        className="button"
+                        onClick={() => {
+                            dispatch(pollActions.toggleCreatePollModal());
+                        }}
+                    >
                         Cancel
                     </button>
                 </footer>

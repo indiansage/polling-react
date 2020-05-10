@@ -109,7 +109,7 @@ export function configureFakeBackend() {
                 poll.id = polls.length
                     ? Math.max(...polls.map((x) => x.id)) + 1
                     : 1;
-                users.push(poll);
+                polls.push(poll);
                 localStorage.setItem('polls', JSON.stringify(polls));
 
                 return ok();
