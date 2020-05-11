@@ -12,45 +12,27 @@ export function polls(state = initialState, action) {
             return { ...state, loading: false, livePolls, closedPolls };
         case constants.POLLS_GETALL_FAILURE:
             return { ...state, loading: false, error: action.error };
-        case constants.POLLS_CREATE_REQUEST:
+        case constants.POLL_CREATE_REQUEST:
             return { ...state, creating: true };
-        case constants.POLLS_CREATE_SUCCESS:
+        case constants.POLL_CREATE_SUCCESS:
             return { ...state, creating: false };
-        case constants.POLLS_CREATE_FAILURE:
+        case constants.POLL_CREATE_FAILURE:
             return { ...state, creating: false, error: action.error };
+        case constants.POLL_CLOSE_REQUEST:
+            return { ...state, closing: true };
+        case constants.POLL_CLOSE_SUCCESS:
+            return { ...state, closing: false };
+        case constants.POLL_CLOSE_FAILURE:
+            return { ...state, closing: false, error: action.error };
         case constants.TOGGLE_CREATE_POLL_MODAL:
             return {
                 ...state,
                 showCreatePollModal: !state.showCreatePollModal
             };
-        // case constants.DELETE_REQUEST:
-        //     // add 'deleting:true' property to user being deleted
-        //     return {
-        //         ...state,
-        //         items: state.items.map((user) =>
-        //             user.id === action.id ? { ...user, deleting: true } : user
-        //         )
-        //     };
-        // case constants.DELETE_SUCCESS:
-        //     // remove deleted user from state
-        //     return {
-        //         items: state.items.filter((user) => user.id !== action.id)
-        //     };
-        // case constants.DELETE_FAILURE:
-        //     // remove 'deleting:true' property and add 'deleteError:[error]' property to user
-        //     return {
-        //         ...state,
-        //         items: state.items.map((user) => {
-        //             if (user.id === action.id) {
-        //                 // make copy of user without 'deleting:true' property
-        //                 const { deleting, ...userCopy } = user;
-        //                 // return copy of user with 'deleteError:[error]' property
-        //                 return { ...userCopy, deleteError: action.error };
-        //             }
-
-        //             return user;
-        //         })
-        //     };
+        case constants.CLEAR_ALL_POLLS:
+            return {
+                ...initialState
+            };
         default:
             return state;
     }

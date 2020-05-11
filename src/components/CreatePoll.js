@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import { pollActions } from '../actions/pollActions';
 
@@ -15,7 +14,6 @@ const CreatePoll = () => {
         (state) => state.polls.showCreatePollModal
     );
     const dispatch = useDispatch();
-    //const history = useHistory();
 
     function addOption(e) {
         e.preventDefault();
@@ -79,7 +77,7 @@ const CreatePoll = () => {
                                 )}
                             </div>
                         </div>
-                        {options.map((val, index) => {
+                        {options.map((_val, index) => {
                             const optionId = `option-${index}`;
                             return (
                                 <div className="field" key={optionId}>
@@ -100,48 +98,72 @@ const CreatePoll = () => {
                                 </div>
                             );
                         })}
-                        <div className="buttons is-pulled-right">
-                            <button
-                                className="button is-primary"
-                                onClick={addOption}
-                            >
-                                <span className="icon">
-                                    <i className="fas fa-plus"></i>
-                                </span>
-                            </button>
-                            <button
-                                className="button is-primary"
-                                onClick={removeOption}
-                                disabled={options.length < 3}
-                            >
-                                <span className="icon">
-                                    <i className="fas fa-minus"></i>
-                                </span>
-                            </button>
-                        </div>
                     </form>
                 </section>
                 <footer className="modal-card-foot">
-                    <button
-                        className={
-                            'button is-primary' +
-                            (creating ? ' is-loading' : '')
-                        }
-                        onClick={handleSubmit}
-                    >
-                        <span>Create</span>
-                        <span className="icon">
-                            <i className="fas fa-check" />
-                        </span>
-                    </button>
-                    <button
-                        className="button"
-                        onClick={() => {
-                            dispatch(pollActions.toggleCreatePollModal());
-                        }}
-                    >
-                        Cancel
-                    </button>
+                    <nav className="level">
+                        <div className="level-left">
+                            <div className="level-item">
+                                <button
+                                    className={
+                                        'button is-primary' +
+                                        (creating ? ' is-loading' : '')
+                                    }
+                                    onClick={handleSubmit}
+                                >
+                                    <span>Create</span>
+                                    <span className="icon">
+                                        <i className="fas fa-check" />
+                                    </span>
+                                </button>
+                            </div>
+                            <div className="level-item">
+                                <button
+                                    className="button"
+                                    onClick={() => {
+                                        dispatch(
+                                            pollActions.toggleCreatePollModal()
+                                        );
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <div className="level-right">
+                                    <div className="level-item">
+                                        <button
+                                            className="button"
+                                            onClick={() => {
+                                                dispatch(
+                                                    pollActions.toggleCreatePollModal()
+                                                );
+                                            }}
+                                        >
+                                            Clear
+                                        </button>
+                                        <div className="buttons">
+                                            <button
+                                                className="button is-primary"
+                                                onClick={addOption}
+                                            >
+                                                <span className="icon">
+                                                    <i className="fas fa-plus"></i>
+                                                </span>
+                                            </button>
+                                            <button
+                                                className="button is-primary"
+                                                onClick={removeOption}
+                                                disabled={options.length < 3}
+                                            >
+                                                <span className="icon">
+                                                    <i className="fas fa-minus"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
                 </footer>
             </div>
         </div>

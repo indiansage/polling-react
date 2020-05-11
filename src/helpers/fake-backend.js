@@ -8,6 +8,7 @@ if (!users.find((x) => x.username === 'admin')) {
     localStorage.setItem('users', JSON.stringify(users));
 }
 let polls = JSON.parse(localStorage.getItem('polls')) || [];
+let votesByQuestion = JSON.parse(localStorage.getItem('votesByQuestion')) || [];
 
 export function configureFakeBackend() {
     let realFetch = window.fetch;
@@ -32,7 +33,7 @@ export function configureFakeBackend() {
                         return createPoll();
                     case url.match(/\/polls\/\d+$/) && method === 'PATCH':
                         return modifyStatusPoll();
-                    case url.match(/\/polls\/\d+\/vote$/) && method === 'PATCH':
+                    case url.match(/\/polls\/\d+\/vote$/) && method === 'POST':
                         return vote();
                     case url.endsWith('/users') && method === 'GET':
                         return getUsers();
@@ -75,22 +76,38 @@ export function configureFakeBackend() {
                         id: user.id,
                         username: user.username,
                         isAdmin: user.isAdmin,
-                        token: 'fake-jwt-token-admin'
+                        token: 'fake-jwt-token-admin-' + user.id
                     });
                 } else {
                     return ok({
                         id: user.id,
                         username: user.username,
                         isAdmin: user.isAdmin,
-                        token: 'fake-jwt-token'
+                        token: 'fake-jwt-token-' + user.id
                     });
                 }
             }
 
             function getPolls() {
                 if (!isLoggedIn()) return unauthorized();
-                if (isLoggedIn() && !isAdminLoggedIn()) {
-                    return ok(polls.filter((x) => x.live));
+                if (isUserLoggedIn()) {
+                    const tokenParts = headers['Authorization'].split('-');
+                    const userId = parseInt(tokenParts[tokenParts.length - 1]);
+                    return ok(
+                        polls.filter((poll) => {
+                            const isPollLive = poll.live;
+                            const userVoted =
+                                votesByQuestion &&
+                                votesByQuestion.includes(
+                                    (question) =>
+                                        question.qid === poll.id &&
+                                        question.votes.includes(
+                                            (vote) => vote.uid === userId
+                                        )
+                                );
+                            return isPollLive && !userVoted;
+                        })
+                    );
                 }
                 if (isAdminLoggedIn()) {
                     return ok(polls);
@@ -105,7 +122,7 @@ export function configureFakeBackend() {
                     return error('This question is already live');
                 }
 
-                // assign user id and a few other properties then save
+                // structure of polls object : [{id,live,question,options:[option,option,...]},{id,live,question,options:[option,option,...]},...]
                 poll.id = polls.length
                     ? Math.max(...polls.map((x) => x.id)) + 1
                     : 1;
@@ -126,22 +143,49 @@ export function configureFakeBackend() {
             }
 
             function vote() {
-                if (!isLoggedIn()) return unauthorized();
-                const urlParts = url.split('/');
-                const id = parseInt(urlParts[urlParts.length - 2]);
-                const poll = polls.find((x) => x.id === id);
-                poll.options = poll.options.map((x) => {
-                    if (x.option === body.option) {
-                        x.votes++;
-                        return x;
+                if (!isUserLoggedIn()) return unauthorized();
+                // structure of votesByQuestion object :
+                //[{qid,votes:[{uid,option},{uid,option},...]},{qid,votes:[{uid,option},{uid,option},...]},...]
+                const { qid, option } = body;
+                const tokenParts = headers['Authorization'].split('-');
+                const uid = parseInt(tokenParts[tokenParts.length - 1]);
+                const question =
+                    votesByQuestion.find((x) => x.qid === qid) || {}; //find all votes for question
+                if (!question) {
+                    const questionIsLive = polls.find(
+                        (x) => x.id === qid && x.live
+                    );
+                    if (questionIsLive) {
+                        question.qid = qid;
+                        question.votes = [];
+                        question.votes.push({ uid, option });
+                        votesByQuestion.push(question);
+                        localStorage.setItem(
+                            'votesByQuestion',
+                            JSON.stringify(votesByQuestion)
+                        );
+                        return ok();
                     } else {
-                        return x;
+                        return error('Question not found!');
                     }
-                });
-                polls = polls.filter((x) => x.id !== id);
-                polls.push(poll);
-                localStorage.setItem('polls', JSON.stringify(polls));
-                return ok();
+                }
+                const userVotedBefore = question.votes.includes(
+                    (x) => x.uid === uid
+                );
+                if (userVotedBefore) {
+                    return error('Vote already counted for this poll!');
+                } else {
+                    question.votes.push({ uid, option });
+                    votesByQuestion = votesByQuestion.filter(
+                        (x) => x.qid !== qid
+                    );
+                    votesByQuestion.push(question);
+                    localStorage.setItem(
+                        'votesByQuestion',
+                        JSON.stringify(votesByQuestion)
+                    );
+                    return ok();
+                }
             }
 
             function getUsers() {
@@ -185,15 +229,20 @@ export function configureFakeBackend() {
             }
 
             function isLoggedIn() {
-                return (
-                    headers['Authorization'] === 'Bearer fake-jwt-token' ||
-                    headers['Authorization'] === 'Bearer fake-jwt-token-admin'
+                return headers['Authorization'].startsWith(
+                    'Bearer fake-jwt-token'
+                );
+            }
+
+            function isUserLoggedIn() {
+                return headers['Authorization'].match(
+                    /Bearer fake-jwt-token-\d+$/
                 );
             }
 
             function isAdminLoggedIn() {
-                return (
-                    headers['Authorization'] === 'Bearer fake-jwt-token-admin'
+                return headers['Authorization'].startsWith(
+                    'Bearer fake-jwt-token-admin'
                 );
             }
 

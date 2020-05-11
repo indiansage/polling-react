@@ -4,7 +4,8 @@ import { userService } from './userService';
 
 export const pollService = {
     getAll,
-    create
+    create,
+    close
 };
 
 //helper function
@@ -43,4 +44,16 @@ function create(poll) {
     };
 
     return fetch(`${apiUrl}/polls/create`, requestOptions).then(handleResponse);
+}
+
+function close(pollId) {
+    const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify({ live: false })
+    };
+
+    return fetch(`${apiUrl}/polls/${pollId}`, requestOptions).then(
+        handleResponse
+    );
 }

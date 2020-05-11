@@ -14,22 +14,24 @@ const Alerts = () => {
         });
     }, []);
     return (
-        <div className="columns">
-            <div className="column is-offset-4 is-4">
-                {alert.message && (
-                    <div className={`notification ${alert.type}`}>
-                        <button
-                            className="delete"
-                            onClick={() => {
-                                // clear alert
-                                dispatch(alertActions.clear());
-                            }}
-                        />
-                        {alert.message}
+        <>
+            {alert.message && (
+                <div className="columns">
+                    <div className="column is-offset-3 is-6">
+                        <div className={`notification ${alert.type}`}>
+                            <button
+                                className="delete"
+                                onClick={() => {
+                                    // clear alert
+                                    dispatch(alertActions.clear());
+                                }}
+                            />
+                            {alert.message}
+                        </div>
                     </div>
-                )}
-            </div>
-        </div>
+                </div>
+            )}
+        </>
     );
 };
 

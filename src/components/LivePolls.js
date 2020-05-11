@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { pollActions } from '../actions/pollActions';
 import CreatePoll from './CreatePoll';
+import LivePoll from './LivePoll';
 
 const LivePolls = () => {
     const user = useSelector((state) => state.authentication.user);
     const polls = useSelector((state) => state.polls);
     const { livePolls } = polls;
-    //const [createPollModal, setCreatePollModal] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -19,7 +19,6 @@ const LivePolls = () => {
 
     return (
         <>
-            {' '}
             <CreatePoll />
             <section className="section">
                 <div className="box">
@@ -61,38 +60,14 @@ const LivePolls = () => {
                                 </span>
                             </h2>
                         )}
-                        {livePolls && (
-                            <ul>
+                        {livePolls && !polls.loading && (
+                            <div className="columns is-multiline">
                                 {livePolls.map((poll, index) => (
-                                    <li key={poll.id}>
-                                        <div className="column is-4">
-                                            {poll.question}
-                                            {/* {user.firstName + ' ' + user.lastName}
-                            {user.deleting ? (
-                                <em> - Deleting...</em>
-                            ) : user.deleteError ? (
-                                <span className="text-danger">
-                                    {' '}
-                                    - ERROR: {user.deleteError}
-                                </span>
-                            ) : (
-                                <span>
-                                    {' '}
-                                    -{' '}
-                                    <a
-                                        onClick={() =>
-                                            handleDeleteUser(user.id)
-                                        }
-                                        className="text-primary"
-                                    >
-                                        Delete
-                                    </a>
-                                </span>
-                            )} */}
-                                        </div>
-                                    </li>
+                                    <div className="column is-4" key={poll.id}>
+                                        <LivePoll poll={poll} />
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         )}
                     </div>
                 </div>

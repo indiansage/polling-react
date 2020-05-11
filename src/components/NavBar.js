@@ -12,7 +12,7 @@ const NavBar = () => {
     const user = useSelector((state) => state.authentication.user);
     if (loggedIn) {
         return (
-            <nav className="navbar">
+            <nav className="navbar is-fixed-top is-light">
                 <div className="container">
                     <div className="navbar-brand">
                         <Link to="/">
@@ -62,7 +62,7 @@ const NavBar = () => {
         );
     } else {
         return (
-            <nav className="navbar">
+            <nav className="navbar is-fixed-top is-light">
                 <div className="container">
                     <div className="navbar-brand">
                         <Link to="/">

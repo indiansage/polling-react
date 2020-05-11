@@ -5,7 +5,9 @@ import { alertActions } from './alertActions';
 export const pollActions = {
     getAllPolls,
     createPoll,
-    toggleCreatePollModal
+    closePoll,
+    toggleCreatePollModal,
+    clearAllPolls
 };
 
 function getAllPolls() {
@@ -51,16 +53,47 @@ function createPoll(poll) {
     };
 
     function request() {
-        return { type: constants.POLLS_CREATE_REQUEST };
+        return { type: constants.POLL_CREATE_REQUEST };
     }
     function success() {
-        return { type: constants.POLLS_CREATE_SUCCESS };
+        return { type: constants.POLL_CREATE_SUCCESS };
     }
     function failure(error) {
-        return { type: constants.POLLS_CREATE_FAILURE, error };
+        return { type: constants.POLL_CREATE_FAILURE, error };
+    }
+}
+
+function closePoll(pollId) {
+    return (dispatch) => {
+        dispatch(request());
+        pollService.close(pollId).then(
+            () => {
+                dispatch(success());
+                dispatch(alertActions.success('Poll closed successfully!'));
+                dispatch(getAllPolls());
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
+
+    function request() {
+        return { type: constants.POLL_CLOSE_REQUEST };
+    }
+    function success() {
+        return { type: constants.POLL_CLOSE_SUCCESS };
+    }
+    function failure(error) {
+        return { type: constants.POLL_CLOSE_FAILURE, error };
     }
 }
 
 function toggleCreatePollModal() {
     return { type: constants.TOGGLE_CREATE_POLL_MODAL };
+}
+
+function clearAllPolls() {
+    return { type: constants.CLEAR_ALL_POLLS };
 }

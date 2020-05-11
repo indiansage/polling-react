@@ -1,6 +1,7 @@
 import { constants } from '../constants';
 import { userService } from '../services/userService';
 import { alertActions } from './alertActions';
+import { pollActions } from './pollActions';
 
 export const userActions = {
     register,
@@ -71,8 +72,14 @@ function login(username, password, history) {
 }
 
 function logout() {
-    userService.logout();
-    return { type: constants.LOGOUT };
+    return (dispatch) => {
+        userService.logout();
+        dispatch(pollActions.clearAllPolls());
+        dispatch(removeUserFromState());
+    };
+    function removeUserFromState() {
+        return { type: constants.LOGOUT };
+    }
 }
 
 function getAll() {

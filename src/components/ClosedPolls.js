@@ -29,28 +29,6 @@ const ClosedPolls = () => {
                                 <li key={poll.id}>
                                     <div className="column is-4">
                                         {poll.question}
-                                        {/* {user.firstName + ' ' + user.lastName}
-                            {user.deleting ? (
-                                <em> - Deleting...</em>
-                            ) : user.deleteError ? (
-                                <span className="text-danger">
-                                    {' '}
-                                    - ERROR: {user.deleteError}
-                                </span>
-                            ) : (
-                                <span>
-                                    {' '}
-                                    -{' '}
-                                    <a
-                                        onClick={() =>
-                                            handleDeleteUser(user.id)
-                                        }
-                                        className="text-primary"
-                                    >
-                                        Delete
-                                    </a>
-                                </span>
-                            )} */}
                                     </div>
                                 </li>
                             ))}

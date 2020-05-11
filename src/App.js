@@ -24,17 +24,15 @@ function App() {
     return (
         <Provider store={configureStore()}>
             <Router history={history}>
-                <div className="container">
-                    <NavBar />
-                    <Alerts />
-                    <Switch>
-                        <Route exact path="/welcome" component={Welcome} />
-                        <Route exact path="/login" component={Login} />
-                        <Route exact path="/register" component={Register} />
-                        <PrivateRoute exact path="/" component={Home} />
-                        <Redirect from="*" to="/" />
-                    </Switch>
-                </div>
+                <NavBar />
+                <Alerts />
+                <Switch>
+                    <Route exact path="/welcome" component={Welcome} />
+                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/register" component={Register} />
+                    <PrivateRoute exact path="/" component={Home} />
+                    <Redirect from="*" to="/" />
+                </Switch>
             </Router>
         </Provider>
     );

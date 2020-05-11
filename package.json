@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "file-loader": "^6.0.0",
     "redux-devtools-extension": "^2.13.8"
   }
 }
