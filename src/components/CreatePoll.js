@@ -48,7 +48,7 @@ const CreatePoll = () => {
         setSubmitted(true);
         if (question && options.every((val) => val)) {
             dispatch(pollActions.createPoll(poll));
-            console.log('done');
+            //console.log('done');
         }
     }
 

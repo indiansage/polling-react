@@ -1,32 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import ClosedPoll from './ClosedPoll';
+import { pollActions } from '../actions/pollActions';
 
 const ClosedPolls = () => {
-    const polls = useSelector((state) => state.polls);
-    const { closedPolls } = polls;
+    const dispatch = useDispatch();
+    const closedPollsWithVotes = useSelector(
+        (state) => state.polls.closedPollsWithVotes
+    );
+    console.log(closedPollsWithVotes);
+    useEffect(() => {
+        dispatch(pollActions.getClosedPollsWithVotes());
+    }, []);
+
+    //const { closedPolls } = polls;
     return (
         <section className="section">
             <div className="box">
                 <div className="container">
                     <h1 className="title has-text-centered-mobile">Closed</h1>
-                    {polls.loading && (
+                    {closedPollsWithVotes && closedPollsWithVotes.loading && (
                         <progress className="progress is-primary" max="100" />
                     )}
-                    {!polls.loading && closedPolls && closedPolls.length === 0 && (
-                        <>
-                            <br />
-                            <h2 className="subtitle has-text-centered">
-                                <span>No polls found </span>
-                                <span className="icon">
-                                    <i className="fas fa-thumbs-down" />
-                                </span>
-                            </h2>
-                        </>
-                    )}
-                    {closedPolls && !polls.loading && (
+                    {closedPollsWithVotes &&
+                        !closedPollsWithVotes.loading &&
+                        closedPollsWithVotes.length === 0 && (
+                            <>
+                                <br />
+                                <h2 className="subtitle has-text-centered">
+                                    <span>No polls found </span>
+                                    <span className="icon">
+                                        <i className="fas fa-thumbs-down" />
+                                    </span>
+                                </h2>
+                            </>
+                        )}
+                    {closedPollsWithVotes && !closedPollsWithVotes.loading && (
                         <div className="columns is-multiline">
-                            {closedPolls.map((poll, index) => (
+                            {closedPollsWithVotes.items.map((poll, index) => (
                                 <div className="column is-4" key={poll.id}>
                                     <ClosedPoll poll={poll} />
                                 </div>

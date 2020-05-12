@@ -27,9 +27,26 @@ export function polls(state = initialState, action) {
         case constants.POLL_VOTE_REQUEST:
             return { ...state, voting: true };
         case constants.POLL_VOTE_SUCCESS:
-            return { ...state, voting: false };
+            return { ...state, voting: false, votes: action.votes };
         case constants.POLL_VOTE_FAILURE:
             return { ...state, voting: false, error: action.error };
+        case constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_REQUEST: {
+            const closedPollsWithVotes = {};
+            closedPollsWithVotes.loading = true;
+            return { ...state, closedPollsWithVotes };
+        }
+        case constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_SUCCESS: {
+            const closedPollsWithVotes = {};
+            closedPollsWithVotes.loading = false;
+            closedPollsWithVotes.items = action.items;
+            return { ...state, closedPollsWithVotes };
+        }
+        case constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_FAILURE: {
+            const closedPollsWithVotes = {};
+            closedPollsWithVotes.loading = false;
+            closedPollsWithVotes.error = action.error;
+            return { ...state, closedPollsWithVotes };
+        }
         case constants.TOGGLE_CREATE_POLL_MODAL:
             return {
                 ...state,

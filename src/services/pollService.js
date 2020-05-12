@@ -6,7 +6,9 @@ export const pollService = {
     getAll,
     create,
     close,
-    vote
+    vote,
+    getVotes,
+    getAllClosedPollsWithVotes
 };
 
 //helper function
@@ -69,4 +71,24 @@ function vote(pollId, option) {
     return fetch(`${apiUrl}/polls/${pollId}/vote`, requestOptions).then(
         handleResponse
     );
+}
+
+function getVotes(pollId) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', ...authHeader() }
+    };
+
+    return fetch(`${apiUrl}/polls/${pollId}/votes`, requestOptions).then(
+        handleResponse
+    );
+}
+
+function getAllClosedPollsWithVotes() {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', ...authHeader() }
+    };
+
+    return fetch(`${apiUrl}/polls/votes`, requestOptions).then(handleResponse);
 }

@@ -35,6 +35,10 @@ export function configureFakeBackend() {
                         return modifyStatusPoll();
                     case url.match(/\/polls\/\d+\/vote$/) && method === 'POST':
                         return vote();
+                    case url.match(/\/polls\/\d+\/votes$/) && method === 'GET':
+                        return getVotes();
+                    case url.match(/\/polls\/votes$/) && method === 'GET':
+                        return getVotesForAllClosed();
                     case url.endsWith('/users') && method === 'GET':
                         return getUsers();
                     case url.match(/\/users\/\d+$/) && method === 'DELETE':
@@ -157,7 +161,7 @@ export function configureFakeBackend() {
                 const uid = parseInt(tokenParts[tokenParts.length - 1]);
                 const question =
                     votesByQuestion.find((x) => x.qid === qid) || {}; //find all votes for question
-                console.log(question);
+                //(question);
                 if (question !== {}) {
                     //console.log('question');
                     const questionIsLive = polls.find(
@@ -194,6 +198,94 @@ export function configureFakeBackend() {
                     );
                     return ok();
                 }
+            }
+
+            function getVotes() {
+                if (!isAdminLoggedIn()) return unauthorized();
+                const urlParts = url.split('/');
+                const qid = parseInt(urlParts[urlParts.length - 2]);
+
+                const poll = polls.find((poll) => poll.id === qid);
+                if (!poll) {
+                    return error('Poll not found!');
+                }
+                if (poll.live) {
+                    return error('Poll not closed yet!');
+                }
+                const question = votesByQuestion.find(
+                    (question) => qid === question.qid
+                );
+                let responseBody = {};
+                //poll -> {id,live,question,options:[option,option,...]}
+                //question -> {qid,votes:[{uid,option},{uid,option},...]}
+                //response format -> {qid,question,options:[{option,votes},{option,votes},...]}
+                if (!question) {
+                    responseBody.qid = qid;
+                    responseBody.question = poll.question;
+                    responseBody.options = poll.options.map((option) => {
+                        return { option, votes: 0 };
+                    });
+
+                    return ok(responseBody);
+                }
+                responseBody.qid = qid;
+                responseBody.question = poll.question;
+                responseBody.options = poll.options.map((option) => {
+                    const votes = question.votes.reduce(
+                        (sum, vote) => (vote.option === option ? sum++ : sum),
+                        0
+                    );
+                    return { option, votes };
+                });
+                return ok(responseBody);
+            }
+
+            function getVotesForAllClosed() {
+                if (!isAdminLoggedIn()) return unauthorized();
+                //const urlParts = url.split('/');
+                //const qid = parseInt(urlParts[urlParts.length - 2]);
+                if (polls === []) {
+                    return ok([]);
+                }
+                const closedPolls = polls.filter((poll) => !poll.live);
+
+                const responseBody = closedPolls.map((poll) => {
+                    const question = votesByQuestion.find(
+                        (question) => poll.id === question.qid
+                    );
+                    let returnBody = {};
+
+                    if (!question) {
+                        returnBody.qid = poll.id;
+                        returnBody.question = poll.question;
+                        returnBody.options = poll.options.map((option) => {
+                            return { option, votes: 0 };
+                        });
+
+                        return returnBody;
+                    }
+                    returnBody.qid = poll.id;
+                    returnBody.question = poll.question;
+                    returnBody.options = poll.options.map((option) => {
+                        const votes = question.votes.reduce(
+                            (sum, vote) =>
+                                vote.option === option ? sum++ : sum,
+                            0
+                        );
+                        return { option, votes };
+                    });
+                    return returnBody;
+                });
+
+                //poll -> {id,live,question,options:[option,option,...]}
+                //question -> {qid,votes:[{uid,option},{uid,option},...]}
+                // structure of closedPolls object :
+                //[{id,live,question,options:[option,option,...]},{id,live,question,options:[option,option,...]},...]
+                // structure of votesByQuestion object :
+                //[{qid,votes:[{uid,option},{uid,option},...]},{qid,votes:[{uid,option},{uid,option},...]},...]
+                //response format -> [{qid,question,options:[{option,votes},{option,votes},...]}...]
+
+                return ok(responseBody);
             }
 
             function getUsers() {

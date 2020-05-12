@@ -9,7 +9,6 @@ import {
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import './sass/main.sass';
-import history from './helpers/history';
 import configureStore from './helpers/store';
 
 import Login from './components/Login';
@@ -23,7 +22,7 @@ import PrivateRoute from './components/PrivateRoute';
 function App() {
     return (
         <Provider store={configureStore()}>
-            <Router history={history}>
+            <Router>
                 <NavBar />
                 <Alerts />
                 <Switch>

@@ -7,6 +7,8 @@ export const pollActions = {
     createPoll,
     closePoll,
     vote,
+    getVotes,
+    getClosedPollsWithVotes,
     toggleCreatePollModal,
     clearAllPolls
 };
@@ -115,6 +117,62 @@ function vote(pollId, option) {
     }
     function failure(error) {
         return { type: constants.POLL_VOTE_FAILURE, error };
+    }
+}
+
+function getVotes(pollId) {
+    return (dispatch) => {
+        dispatch(request());
+        pollService.getVotes(pollId).then(
+            (votes) => {
+                dispatch(success(votes));
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
+
+    function request() {
+        return { type: constants.GET_VOTES_REQUEST };
+    }
+    function success(votes) {
+        return { type: constants.GET_VOTES_SUCCESS, votes };
+    }
+    function failure(error) {
+        return { type: constants.GET_VOTES_FAILURE, error };
+    }
+}
+
+function getClosedPollsWithVotes() {
+    return (dispatch) => {
+        dispatch(request());
+        pollService.getAllClosedPollsWithVotes().then(
+            (items) => {
+                dispatch(success(items));
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
+
+    function request() {
+        return { type: constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_REQUEST };
+    }
+    function success(items) {
+        return {
+            type: constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_SUCCESS,
+            items
+        };
+    }
+    function failure(error) {
+        return {
+            type: constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_FAILURE,
+            error
+        };
     }
 }
 

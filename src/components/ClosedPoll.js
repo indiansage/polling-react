@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import ReactEcharts from 'echarts-for-react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as actions from '../actions/pollActions';
 
 class ClosedPoll extends Component {
     constructor(props) {
@@ -7,16 +11,29 @@ class ClosedPoll extends Component {
         //this.state = { counter: 0 };
         //this.handleClick = this.handleClick.bind(this);
     }
+
+    // componentDidMount() {
+    //     this.props.getVotes(this.props.poll.id);
+    //     //console.log(actions.pollActions.getVotes());
+    // }
+
     render() {
         const { poll } = this.props;
-        console.log(poll);
+        //poll object -> {qid,question,options:[{option,votes},{option,votes},...]}
+        const pieChartData = poll.options.map((option) => {
+            return {
+                name: option.option,
+                value: option.votes
+            };
+        });
         return (
             <div className="box">
+                {}
                 <ReactEcharts
                     option={{
                         title: {
                             text: poll.question,
-                            subtext: 'Topics minus APIs',
+                            //subtext: 'Topics minus APIs',
                             x: 'center'
                         },
                         tooltip: {
@@ -35,15 +52,7 @@ class ClosedPoll extends Component {
                                 type: 'pie',
                                 radius: '55%',
                                 center: ['50%', '60%'],
-                                data: [
-                                    { value: 78, name: 'Machine Learning' },
-                                    { value: 63, name: 'Fraud / Security' },
-                                    { value: 30, name: 'Marketing' },
-                                    { value: 29, name: 'Data / Analytics' },
-                                    { value: 28, name: 'Health Tech' },
-                                    { value: 17, name: 'IoT / Mfg' },
-                                    { value: 14, name: 'Chatbots / VAs' }
-                                ],
+                                data: pieChartData,
                                 itemStyle: {
                                     emphasis: {
                                         shadowBlur: 0,
@@ -59,4 +68,14 @@ class ClosedPoll extends Component {
         );
     }
 }
-export default ClosedPoll;
+
+const mapDispatchToProps = (dispatch) => {
+    return { getVotes: (args) => dispatch(actions.pollActions.getVotes(args)) };
+};
+//bindActionCreators({ ...actions }, dispatch);
+const mapStateToProps = (state) => {
+    return {
+        //a:state.a -> use as this.props.a
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ClosedPoll);
