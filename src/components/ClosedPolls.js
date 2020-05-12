@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ClosedPoll from './ClosedPoll';
 
 const ClosedPolls = () => {
     const polls = useSelector((state) => state.polls);
@@ -23,16 +24,14 @@ const ClosedPolls = () => {
                             </h2>
                         </>
                     )}
-                    {closedPolls && (
-                        <ul>
+                    {closedPolls && !polls.loading && (
+                        <div className="columns is-multiline">
                             {closedPolls.map((poll, index) => (
-                                <li key={poll.id}>
-                                    <div className="column is-4">
-                                        {poll.question}
-                                    </div>
-                                </li>
+                                <div className="column is-4" key={poll.id}>
+                                    <ClosedPoll poll={poll} />
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
             </div>

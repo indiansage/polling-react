@@ -24,6 +24,12 @@ export function polls(state = initialState, action) {
             return { ...state, closing: false };
         case constants.POLL_CLOSE_FAILURE:
             return { ...state, closing: false, error: action.error };
+        case constants.POLL_VOTE_REQUEST:
+            return { ...state, voting: true };
+        case constants.POLL_VOTE_SUCCESS:
+            return { ...state, voting: false };
+        case constants.POLL_VOTE_FAILURE:
+            return { ...state, voting: false, error: action.error };
         case constants.TOGGLE_CREATE_POLL_MODAL:
             return {
                 ...state,

@@ -6,6 +6,7 @@ export const pollActions = {
     getAllPolls,
     createPoll,
     closePoll,
+    vote,
     toggleCreatePollModal,
     clearAllPolls
 };
@@ -87,6 +88,33 @@ function closePoll(pollId) {
     }
     function failure(error) {
         return { type: constants.POLL_CLOSE_FAILURE, error };
+    }
+}
+
+function vote(pollId, option) {
+    return (dispatch) => {
+        dispatch(request());
+        pollService.vote(pollId, option).then(
+            () => {
+                dispatch(success());
+                dispatch(alertActions.success('Voted!'));
+                dispatch(getAllPolls());
+            },
+            (error) => {
+                dispatch(failure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            }
+        );
+    };
+
+    function request() {
+        return { type: constants.POLL_VOTE_REQUEST };
+    }
+    function success() {
+        return { type: constants.POLL_VOTE_SUCCESS };
+    }
+    function failure(error) {
+        return { type: constants.POLL_VOTE_FAILURE, error };
     }
 }
 

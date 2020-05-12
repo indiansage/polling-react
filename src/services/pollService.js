@@ -5,7 +5,8 @@ import { userService } from './userService';
 export const pollService = {
     getAll,
     create,
-    close
+    close,
+    vote
 };
 
 //helper function
@@ -54,6 +55,18 @@ function close(pollId) {
     };
 
     return fetch(`${apiUrl}/polls/${pollId}`, requestOptions).then(
+        handleResponse
+    );
+}
+
+function vote(pollId, option) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeader() },
+        body: JSON.stringify({ option })
+    };
+
+    return fetch(`${apiUrl}/polls/${pollId}/vote`, requestOptions).then(
         handleResponse
     );
 }

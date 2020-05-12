@@ -10,6 +10,9 @@ const LivePolls = () => {
     const polls = useSelector((state) => state.polls);
     const { livePolls } = polls;
 
+    //console.log(polls);
+    //console.log(livePolls);
+
     const dispatch = useDispatch();
 
     const handleCreatePollClick = (e) => {

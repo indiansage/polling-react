@@ -93,21 +93,25 @@ export function configureFakeBackend() {
                 if (isUserLoggedIn()) {
                     const tokenParts = headers['Authorization'].split('-');
                     const userId = parseInt(tokenParts[tokenParts.length - 1]);
-                    return ok(
-                        polls.filter((poll) => {
-                            const isPollLive = poll.live;
-                            const userVoted =
-                                votesByQuestion &&
-                                votesByQuestion.includes(
-                                    (question) =>
-                                        question.qid === poll.id &&
-                                        question.votes.includes(
-                                            (vote) => vote.uid === userId
-                                        )
+                    const responseBody = polls.filter((poll) => {
+                        const isPollLive = poll.live;
+                        let userVoted =
+                            votesByQuestion &&
+                            votesByQuestion.find((question) => {
+                                const doesQuestionHaveVotes =
+                                    question.qid === poll.id;
+                                const didUserVote = question.votes.find(
+                                    (vote) => vote.uid === userId
                                 );
-                            return isPollLive && !userVoted;
-                        })
-                    );
+
+                                return doesQuestionHaveVotes && didUserVote;
+                            })
+                                ? true
+                                : false;
+                        return isPollLive && !userVoted;
+                    });
+
+                    return ok(responseBody);
                 }
                 if (isAdminLoggedIn()) {
                     return ok(polls);
@@ -146,12 +150,16 @@ export function configureFakeBackend() {
                 if (!isUserLoggedIn()) return unauthorized();
                 // structure of votesByQuestion object :
                 //[{qid,votes:[{uid,option},{uid,option},...]},{qid,votes:[{uid,option},{uid,option},...]},...]
-                const { qid, option } = body;
+                const { option } = body;
+                const urlParts = url.split('/');
+                const qid = parseInt(urlParts[urlParts.length - 2]);
                 const tokenParts = headers['Authorization'].split('-');
                 const uid = parseInt(tokenParts[tokenParts.length - 1]);
                 const question =
                     votesByQuestion.find((x) => x.qid === qid) || {}; //find all votes for question
-                if (!question) {
+                console.log(question);
+                if (question !== {}) {
+                    //console.log('question');
                     const questionIsLive = polls.find(
                         (x) => x.id === qid && x.live
                     );
