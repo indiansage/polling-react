@@ -21,19 +21,21 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
-        <Provider store={configureStore()}>
-            <Router>
-                <NavBar />
-                <Alerts />
-                <Switch>
-                    <Route exact path="/welcome" component={Welcome} />
-                    <Route exact path="/login" component={Login} />
-                    <Route exact path="/register" component={Register} />
-                    <PrivateRoute exact path="/" component={Home} />
-                    <Redirect from="*" to="/" />
-                </Switch>
-            </Router>
-        </Provider>
+        <div data-testid="App">
+            <Provider store={configureStore()}>
+                <Router>
+                    <NavBar />
+                    <Alerts />
+                    <Switch>
+                        <Route exact path="/welcome" component={Welcome} />
+                        <Route exact path="/login" component={Login} />
+                        <Route exact path="/register" component={Register} />
+                        <PrivateRoute exact path="/" component={Home} />
+                        <Redirect from="*" to="/" />
+                    </Switch>
+                </Router>
+            </Provider>
+        </div>
     );
 }
 

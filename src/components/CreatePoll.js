@@ -63,7 +63,10 @@ const CreatePoll = () => {
     }
 
     return (
-        <div className={'modal' + (showCreatePollModal ? ' is-active' : '')}>
+        <div
+            className={'modal' + (showCreatePollModal ? ' is-active' : '')}
+            data-testid="CreatePollModal"
+        >
             <div className="modal-background" />
             <div className="modal-card">
                 <header className="modal-card-head">

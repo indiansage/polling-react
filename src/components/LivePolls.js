@@ -21,7 +21,7 @@ const LivePolls = () => {
     };
 
     return (
-        <>
+        <div data-testid="LivePolls">
             <CreatePoll />
             <section className="section">
                 <div className="box">
@@ -39,6 +39,7 @@ const LivePolls = () => {
                                         <button
                                             className="button is-primary"
                                             onClick={handleCreatePollClick}
+                                            data-testid="CreatePoll"
                                         >
                                             <span>Create a poll</span>
                                             <span className="icon">
@@ -53,11 +54,12 @@ const LivePolls = () => {
                             <progress
                                 className="progress is-primary"
                                 max="100"
+                                data-testid="progressBar"
                             />
                         )}
                         {!polls.loading && livePolls && livePolls.length === 0 && (
                             <h2 className="subtitle has-text-centered">
-                                <span>No polls found </span>
+                                <span>No polls found</span>
                                 <span className="icon">
                                     <i className="fas fa-thumbs-down" />
                                 </span>
@@ -66,7 +68,11 @@ const LivePolls = () => {
                         {livePolls && !polls.loading && (
                             <div className="columns is-multiline">
                                 {livePolls.map((poll, index) => (
-                                    <div className="column is-4" key={poll.id}>
+                                    <div
+                                        className="column is-4"
+                                        key={poll.id}
+                                        data-testid="LivePollElement"
+                                    >
                                         <LivePoll poll={poll} />
                                     </div>
                                 ))}
@@ -75,7 +81,7 @@ const LivePolls = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 };
 
