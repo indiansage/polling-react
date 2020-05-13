@@ -15,9 +15,15 @@ const Alerts = () => {
     }, []);
     return (
         <>
-            {alert.message && (
-                <div className="columns">
-                    <div className="column is-offset-3 is-6">
+            <div
+                className="columns"
+                style={{ marginTop: '1rem', minHeight: '4rem' }}
+            >
+                {alert.message && (
+                    <div
+                        className="column is-offset-3 is-6"
+                        style={{ padding: '0' }}
+                    >
                         <div className={`notification ${alert.type}`}>
                             <button
                                 className="delete"
@@ -29,8 +35,8 @@ const Alerts = () => {
                             {alert.message}
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </>
     );
 };

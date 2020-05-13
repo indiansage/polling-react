@@ -19,16 +19,31 @@ class ClosedPoll extends Component {
 
     render() {
         const { poll } = this.props;
-        //poll object -> {qid,question,options:[{option,votes},{option,votes},...]}
-        const pieChartData = poll.options.map((option) => {
-            return {
-                name: option.option,
-                value: option.votes
-            };
-        });
+        //poll object -> {qid,question,options:{[option]:votes},{option:votes},...
+        console.log('poll', Object.keys(poll.options));
+        // const pieChartData = poll.options.map((option) => {
+        //     return {
+        //         name: option.option,
+        //         value: option.votes
+        //     };
+        // });
+        const pieChartData = [];
+        Object.keys(poll.options).forEach((key) =>
+            pieChartData.push({ name: key, value: poll.options[key] })
+        );
+        const sampleChartData = [
+            { value: 7, name: 'Machine Learning' },
+            { value: 63, name: 'Fraud / Security' },
+            { value: 30, name: 'Marketing' },
+            { value: 29, name: 'Data / Analytics' },
+            { value: 28, name: 'Health Tech' },
+            { value: 17, name: 'IoT / Mfg' },
+            { value: 14, name: 'Chatbots / VAs' }
+        ];
+        //console.log(poll);
+        console.log(sampleChartData);
         return (
             <div className="box">
-                {}
                 <ReactEcharts
                     option={{
                         title: {
@@ -48,7 +63,7 @@ class ClosedPoll extends Component {
                         },
                         series: [
                             {
-                                name: 'Topic',
+                                name: poll.question,
                                 type: 'pie',
                                 radius: '55%',
                                 center: ['50%', '60%'],

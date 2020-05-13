@@ -152,6 +152,8 @@ export function configureFakeBackend() {
 
             function vote() {
                 if (!isUserLoggedIn()) return unauthorized();
+                // structure of polls object :
+                //[{id,live,question,options:[option,option,...]},{id,live,question,options:[option,option,...]},...]
                 // structure of votesByQuestion object :
                 //[{qid,votes:[{uid,option},{uid,option},...]},{qid,votes:[{uid,option},{uid,option},...]},...]
                 const { option } = body;
@@ -159,15 +161,17 @@ export function configureFakeBackend() {
                 const qid = parseInt(urlParts[urlParts.length - 2]);
                 const tokenParts = headers['Authorization'].split('-');
                 const uid = parseInt(tokenParts[tokenParts.length - 1]);
-                const question =
-                    votesByQuestion.find((x) => x.qid === qid) || {}; //find all votes for question
-                //(question);
-                if (question !== {}) {
-                    //console.log('question');
+                const question = votesByQuestion.find(
+                    (question) => question.qid === qid
+                ); //find all votes for question
+                //console.log(Boolean(question));
+                if (!question) {
+                    console.log('question');
                     const questionIsLive = polls.find(
                         (x) => x.id === qid && x.live
                     );
                     if (questionIsLive) {
+                        let question = {};
                         question.qid = qid;
                         question.votes = [];
                         question.votes.push({ uid, option });
@@ -181,15 +185,15 @@ export function configureFakeBackend() {
                         return error('Question not found!');
                     }
                 }
-                const userVotedBefore = question.votes.includes(
-                    (x) => x.uid === uid
+                const userVotedBefore = question.votes.find(
+                    (vote) => vote.uid === uid
                 );
                 if (userVotedBefore) {
                     return error('Vote already counted for this poll!');
                 } else {
                     question.votes.push({ uid, option });
                     votesByQuestion = votesByQuestion.filter(
-                        (x) => x.qid !== qid
+                        (question) => question.qid !== qid
                     );
                     votesByQuestion.push(question);
                     localStorage.setItem(
@@ -242,8 +246,6 @@ export function configureFakeBackend() {
 
             function getVotesForAllClosed() {
                 if (!isAdminLoggedIn()) return unauthorized();
-                //const urlParts = url.split('/');
-                //const qid = parseInt(urlParts[urlParts.length - 2]);
                 if (polls === []) {
                     return ok([]);
                 }
@@ -253,26 +255,29 @@ export function configureFakeBackend() {
                     const question = votesByQuestion.find(
                         (question) => poll.id === question.qid
                     );
+                    console.log('   ', 'question', question);
                     let returnBody = {};
 
                     if (!question) {
                         returnBody.qid = poll.id;
                         returnBody.question = poll.question;
                         returnBody.options = poll.options.map((option) => {
-                            return { option, votes: 0 };
+                            return { [option]: 0 };
                         });
 
                         return returnBody;
                     }
                     returnBody.qid = poll.id;
                     returnBody.question = poll.question;
-                    returnBody.options = poll.options.map((option) => {
-                        const votes = question.votes.reduce(
-                            (sum, vote) =>
-                                vote.option === option ? sum++ : sum,
-                            0
-                        );
-                        return { option, votes };
+                    returnBody.options = {};
+
+                    question.votes.forEach((vote) => {
+                        if (returnBody.options[vote.option]) {
+                            returnBody.options[vote.option] =
+                                returnBody.options[vote.option] + 1;
+                        } else {
+                            returnBody.options[vote.option] = 1;
+                        }
                     });
                     return returnBody;
                 });
@@ -283,8 +288,10 @@ export function configureFakeBackend() {
                 //[{id,live,question,options:[option,option,...]},{id,live,question,options:[option,option,...]},...]
                 // structure of votesByQuestion object :
                 //[{qid,votes:[{uid,option},{uid,option},...]},{qid,votes:[{uid,option},{uid,option},...]},...]
-                //response format -> [{qid,question,options:[{option,votes},{option,votes},...]}...]
-
+                //response format ->
+                //[{qid,question,options:[{option:votes},{option:votes},...]}...]
+                //desired response format ->
+                //{qid:[question:{{option:votes},{option:votes}}]}
                 return ok(responseBody);
             }
 

@@ -10,15 +10,50 @@ const Home = () => {
     const user = useSelector((state) => state.authentication.user);
     const dispatch = useDispatch();
 
+    const [liveTabActive, setLiveTabActive] = useState(true);
+
     useEffect(() => {
         dispatch(pollActions.getAllPolls());
     }, []);
 
     return (
         <>
-            <LivePolls />
-            {user.isAdmin && <ClosedPolls />}
-            {/* <section className="section">
+            <div className="container">
+                <div className="tabs is-toggle">
+                    <ul>
+                        <li
+                            className={liveTabActive ? 'is-active' : ''}
+                            onClick={() => setLiveTabActive(!liveTabActive)}
+                        >
+                            <a>
+                                <span className="icon">
+                                    <i
+                                        className="fas fa-chart-line"
+                                        aria-hidden="true"
+                                    ></i>
+                                </span>
+                                <span>Live</span>
+                            </a>
+                        </li>
+                        <li
+                            className={!liveTabActive ? 'is-active' : ''}
+                            onClick={() => setLiveTabActive(!liveTabActive)}
+                        >
+                            <a>
+                                <span className="icon">
+                                    <i
+                                        className="fas fa-store-slash"
+                                        aria-hidden="true"
+                                    ></i>
+                                </span>
+                                <span>Closed</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {liveTabActive && <LivePolls />}
+                {!liveTabActive && <ClosedPolls />}
+                {/* <section className="section">
                 <div className="container">
                     <div className="columns is-multiline">
                         {users.error && (
@@ -27,6 +62,7 @@ const Home = () => {
                     </div>
                 </div>
             </section> */}
+            </div>
         </>
     );
 };

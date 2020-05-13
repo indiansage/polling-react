@@ -9,7 +9,7 @@ const ClosedPolls = () => {
     const closedPollsWithVotes = useSelector(
         (state) => state.polls.closedPollsWithVotes
     );
-    console.log(closedPollsWithVotes);
+    console.log('closedPollsWithVotes', closedPollsWithVotes);
     useEffect(() => {
         dispatch(pollActions.getClosedPollsWithVotes());
     }, []);
@@ -25,7 +25,7 @@ const ClosedPolls = () => {
                     )}
                     {closedPollsWithVotes &&
                         !closedPollsWithVotes.loading &&
-                        closedPollsWithVotes.length === 0 && (
+                        closedPollsWithVotes.items.length === 0 && (
                             <>
                                 <br />
                                 <h2 className="subtitle has-text-centered">
@@ -39,7 +39,7 @@ const ClosedPolls = () => {
                     {closedPollsWithVotes && !closedPollsWithVotes.loading && (
                         <div className="columns is-multiline">
                             {closedPollsWithVotes.items.map((poll, index) => (
-                                <div className="column is-4" key={poll.id}>
+                                <div className="column is-4" key={poll.qid}>
                                     <ClosedPoll poll={poll} />
                                 </div>
                             ))}

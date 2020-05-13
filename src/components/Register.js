@@ -111,7 +111,7 @@ const Register = () => {
                                     className="button is-link is-light"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        history.push('/welcome');
+                                        history.push('/login');
                                     }}
                                 >
                                     Cancel

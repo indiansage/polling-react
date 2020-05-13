@@ -38,6 +38,7 @@ export function polls(state = initialState, action) {
         case constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_SUCCESS: {
             const closedPollsWithVotes = {};
             closedPollsWithVotes.loading = false;
+            //console.log('act', action.items);
             closedPollsWithVotes.items = action.items;
             return { ...state, closedPollsWithVotes };
         }

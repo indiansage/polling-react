@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { pollActions } from '../actions/pollActions';
@@ -14,6 +14,11 @@ const CreatePoll = () => {
         (state) => state.polls.showCreatePollModal
     );
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        clearFormValues();
+        setSubmitted(false);
+    }, [showCreatePollModal]);
 
     function addOption(e) {
         e.preventDefault();
@@ -50,6 +55,11 @@ const CreatePoll = () => {
             dispatch(pollActions.createPoll(poll));
             //console.log('done');
         }
+    }
+
+    function clearFormValues() {
+        setQuestion('');
+        setOptions(['', '']);
     }
 
     return (
@@ -89,6 +99,7 @@ const CreatePoll = () => {
                                         name={optionId}
                                         className="input"
                                         onChange={handleChangeOptions}
+                                        value={options[index]}
                                     />
                                     {submitted && !options[index] && (
                                         <p className="help is-danger">
@@ -101,69 +112,51 @@ const CreatePoll = () => {
                     </form>
                 </section>
                 <footer className="modal-card-foot">
-                    <nav className="level">
-                        <div className="level-left">
-                            <div className="level-item">
-                                <button
-                                    className={
-                                        'button is-primary' +
-                                        (creating ? ' is-loading' : '')
-                                    }
-                                    onClick={handleSubmit}
-                                >
-                                    <span>Create</span>
-                                    <span className="icon">
-                                        <i className="fas fa-check" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="level-item">
-                                <button
-                                    className="button"
-                                    onClick={() => {
-                                        dispatch(
-                                            pollActions.toggleCreatePollModal()
-                                        );
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                                <div className="level-right">
-                                    <div className="level-item">
-                                        <button
-                                            className="button"
-                                            onClick={() => {
-                                                dispatch(
-                                                    pollActions.toggleCreatePollModal()
-                                                );
-                                            }}
-                                        >
-                                            Clear
-                                        </button>
-                                        <div className="buttons">
-                                            <button
-                                                className="button is-primary"
-                                                onClick={addOption}
-                                            >
-                                                <span className="icon">
-                                                    <i className="fas fa-plus"></i>
-                                                </span>
-                                            </button>
-                                            <button
-                                                className="button is-primary"
-                                                onClick={removeOption}
-                                                disabled={options.length < 3}
-                                            >
-                                                <span className="icon">
-                                                    <i className="fas fa-minus"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+                    <button
+                        className={
+                            'button is-primary' +
+                            (creating ? ' is-loading' : '')
+                        }
+                        onClick={handleSubmit}
+                    >
+                        <span>Create</span>
+                        <span className="icon">
+                            <i className="fas fa-check" />
+                        </span>
+                    </button>
+
+                    <button
+                        className="button"
+                        onClick={() => {
+                            dispatch(pollActions.toggleCreatePollModal());
+                        }}
+                    >
+                        Cancel
+                    </button>
+
+                    <button className="button" onClick={clearFormValues}>
+                        Clear
+                    </button>
+
+                    <div className="buttons">
+                        <button
+                            className="button is-primary"
+                            onClick={addOption}
+                        >
+                            <span className="icon">
+                                <i className="fas fa-plus"></i>
+                            </span>
+                        </button>
+                        <button
+                            className="button is-primary"
+                            onClick={removeOption}
+                            disabled={options.length < 3}
+                        >
+                            <span className="icon">
+                                <i className="fas fa-minus"></i>
+                            </span>
+                        </button>
+                    </div>
                 </footer>
             </div>
         </div>
