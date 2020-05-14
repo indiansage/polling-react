@@ -83,13 +83,13 @@ function closePoll(pollId) {
     };
 
     function request() {
-        return { type: constants.POLL_CLOSE_REQUEST };
+        return { type: constants.POLL_CLOSE_REQUEST, pollId };
     }
     function success() {
-        return { type: constants.POLL_CLOSE_SUCCESS };
+        return { type: constants.POLL_CLOSE_SUCCESS, pollId };
     }
     function failure(error) {
-        return { type: constants.POLL_CLOSE_FAILURE, error };
+        return { type: constants.POLL_CLOSE_FAILURE, pollId, error };
     }
 }
 
@@ -110,13 +110,13 @@ function vote(pollId, option) {
     };
 
     function request() {
-        return { type: constants.POLL_VOTE_REQUEST };
+        return { type: constants.POLL_VOTE_REQUEST, pollId };
     }
     function success() {
-        return { type: constants.POLL_VOTE_SUCCESS };
+        return { type: constants.POLL_VOTE_SUCCESS, pollId };
     }
     function failure(error) {
-        return { type: constants.POLL_VOTE_FAILURE, error };
+        return { type: constants.POLL_VOTE_FAILURE, pollId, error };
     }
 }
 

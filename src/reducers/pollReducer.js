@@ -1,6 +1,6 @@
 import { constants } from '../constants';
 
-const initialState = { showCreatePollModal: false };
+const initialState = { showCreatePollModal: false, voting: {}, closing: {} };
 
 export function polls(state = initialState, action) {
     switch (action.type) {
@@ -18,18 +18,38 @@ export function polls(state = initialState, action) {
             return { ...state, creating: false };
         case constants.POLL_CREATE_FAILURE:
             return { ...state, creating: false, error: action.error };
-        case constants.POLL_CLOSE_REQUEST:
-            return { ...state, closing: true };
-        case constants.POLL_CLOSE_SUCCESS:
-            return { ...state, closing: false };
-        case constants.POLL_CLOSE_FAILURE:
-            return { ...state, closing: false, error: action.error };
-        case constants.POLL_VOTE_REQUEST:
-            return { ...state, voting: true };
-        case constants.POLL_VOTE_SUCCESS:
-            return { ...state, voting: false, votes: action.votes };
-        case constants.POLL_VOTE_FAILURE:
-            return { ...state, voting: false, error: action.error };
+        case constants.POLL_CLOSE_REQUEST: {
+            let closing = { ...state.closing };
+            closing[action.pollId] = true;
+            return { ...state, closing };
+        }
+
+        case constants.POLL_CLOSE_SUCCESS: {
+            let closing = { ...state.closing };
+            closing[action.pollId] = false;
+            return { ...state, closing };
+        }
+
+        case constants.POLL_CLOSE_FAILURE: {
+            let closing = { ...state.closing };
+            closing[action.pollId] = false;
+            return { ...state, closing, error: action.error };
+        }
+        case constants.POLL_VOTE_REQUEST: {
+            let voting = { ...state.voting };
+            voting[action.pollId] = true;
+            return { ...state, voting };
+        }
+        case constants.POLL_VOTE_SUCCESS: {
+            let voting = { ...state.voting };
+            voting[action.pollId] = false;
+            return { ...state, voting };
+        }
+        case constants.POLL_VOTE_FAILURE: {
+            let voting = { ...state.voting };
+            voting[action.pollId] = false;
+            return { ...state, voting, error: action.error };
+        }
         case constants.GET_ALL_CLOSED_POLLS_WITH_VOTES_REQUEST: {
             const closedPollsWithVotes = {};
             closedPollsWithVotes.loading = true;

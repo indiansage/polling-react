@@ -11,7 +11,7 @@ const LivePoll = ({ poll }) => {
 
     const dispatch = useDispatch();
 
-    const onRadioChange = (e) => {
+    const onRadioClick = (e) => {
         setOptionForm(e.target.value);
     };
 
@@ -31,12 +31,13 @@ const LivePoll = ({ poll }) => {
                 <div className="media-content">
                     <div className="content">
                         <strong>{poll.question}</strong>
-                        <form className="pill-form" onChange={onRadioChange}>
+                        <form className="pill-form">
                             {poll.options.map((option) => (
                                 <label
                                     className="pill-label"
                                     key={option}
                                     disabled={user.isAdmin}
+                                    onClick={onRadioClick}
                                 >
                                     <input
                                         type="radio"
@@ -58,9 +59,12 @@ const LivePoll = ({ poll }) => {
                                     <button
                                         className={
                                             'button is-primary is-light' +
-                                            (voting ? ' is-loading' : '')
+                                            (voting[poll.id]
+                                                ? ' is-loading'
+                                                : '')
                                         }
                                         onClick={onVoteClick}
+                                        disabled={optionForm === ''}
                                     >
                                         <span>Vote</span>
                                         <span className="icon">
@@ -72,7 +76,9 @@ const LivePoll = ({ poll }) => {
                                     <button
                                         className={
                                             'button is-primary' +
-                                            (closing ? ' is-loading' : '')
+                                            (closing[poll.id]
+                                                ? ' is-loading'
+                                                : '')
                                         }
                                         onClick={onCloseClick}
                                     >

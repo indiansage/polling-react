@@ -8,11 +8,11 @@ const Alerts = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     useEffect(() => {
-        history.listen((location, action) => {
+        history.listen(() => {
             // clear alert on location change
             dispatch(alertActions.clear());
         });
-    }, []);
+    }, [dispatch, history]);
     return (
         <div
             className="columns"

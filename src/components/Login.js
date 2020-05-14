@@ -16,6 +16,8 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const history = useHistory();
+    //console.log(history);
+    //console.log(useHistory);
 
     // reset login status
     useEffect(() => {
@@ -36,7 +38,7 @@ const Login = () => {
         }
     }
     return (
-        <div className="columns">
+        <div className="columns" data-testid="Login">
             <div className="column is-offset-4 is-4">
                 <div className="box">
                     <h2 className="is-size-3">Login</h2>
@@ -92,7 +94,7 @@ const Login = () => {
                                     className="button is-link is-light"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        history.push('/welcome');
+                                        history.push('/login');
                                     }}
                                 >
                                     Cancel

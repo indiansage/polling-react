@@ -49,6 +49,7 @@ describe('<LivePolls />', () => {
                 <LivePolls />
             </Provider>
         );
+
         expect(getByTestId('progressBar')).toBeInTheDocument();
     });
 

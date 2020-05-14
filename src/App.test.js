@@ -15,7 +15,7 @@ describe('<App/>', () => {
         const { getByTestId } = render(<App />);
         expect(getByTestId('NavBar')).toBeInTheDocument();
     });
-    it('Shows Alerts', () => {
+    it('Loads Alerts Component(may not be visible in UI)', () => {
         const { getByTestId } = render(<App />);
         expect(getByTestId('Alerts')).toBeInTheDocument();
     });

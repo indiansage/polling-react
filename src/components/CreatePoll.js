@@ -6,6 +6,9 @@ import { pollActions } from '../actions/pollActions';
 const CreatePoll = () => {
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '']);
+    const [duplicateValidationFlags, setDuplicateValidationFlags] = useState(
+        []
+    );
 
     const [submitted, setSubmitted] = useState(false);
 
@@ -16,7 +19,8 @@ const CreatePoll = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        clearFormValues();
+        console.log('useEffect');
+        clearFormValues(true);
         setSubmitted(false);
     }, [showCreatePollModal]);
 
@@ -48,18 +52,44 @@ const CreatePoll = () => {
 
     function handleSubmit(e) {
         e.preventDefault();
+
+        //validate duplicate options in form
+        let noDuplicates = true;
+        let duplicateCountMap = new Map();
+        let duplicateFlags = [];
+        options.forEach((option) => {
+            if (duplicateCountMap.has(option)) {
+                duplicateCountMap.set(
+                    option,
+                    duplicateCountMap.get(option) + 1
+                );
+                noDuplicates = false;
+            } else {
+                duplicateCountMap.set(option, 1);
+            }
+        });
+        options.forEach((option, index) => {
+            duplicateFlags[index] =
+                duplicateCountMap.get(option) > 1 ? true : false;
+        });
+        setDuplicateValidationFlags(duplicateFlags);
+
         const poll = { question, options };
 
         setSubmitted(true);
-        if (question && options.every((val) => val)) {
+
+        if (question && options.every((val) => val) && noDuplicates) {
             dispatch(pollActions.createPoll(poll));
-            //console.log('done');
         }
     }
 
-    function clearFormValues() {
+    function clearFormValues(fromLivePolls = false) {
         setQuestion('');
-        setOptions(['', '']);
+        fromLivePolls
+            ? setOptions(['', ''])
+            : setOptions(options.map(() => ''));
+
+        setSubmitted(false);
     }
 
     return (
@@ -106,9 +136,22 @@ const CreatePoll = () => {
                                     />
                                     {submitted && !options[index] && (
                                         <p className="help is-danger">
-                                            {`Option ${index + 1} is required`}
+                                            {index > 1
+                                                ? `Option ${
+                                                      index + 1
+                                                  } is required. Remove if not required.`
+                                                : `Option ${
+                                                      index + 1
+                                                  } is required.`}
                                         </p>
                                     )}
+                                    {submitted &&
+                                        options[index] &&
+                                        duplicateValidationFlags[index] && (
+                                            <p className="help is-danger">
+                                                {'Options cannot be identical.'}
+                                            </p>
+                                        )}
                                 </div>
                             );
                         })}
@@ -137,7 +180,10 @@ const CreatePoll = () => {
                         Cancel
                     </button>
 
-                    <button className="button" onClick={clearFormValues}>
+                    <button
+                        className="button"
+                        onClick={() => clearFormValues()}
+                    >
                         Clear
                     </button>
 
