@@ -261,8 +261,9 @@ export function configureFakeBackend() {
                     if (!question) {
                         returnBody.qid = poll.id;
                         returnBody.question = poll.question;
-                        returnBody.options = poll.options.map((option) => {
-                            return { [option]: 0 };
+                        returnBody.options = {};
+                        poll.options.forEach((option) => {
+                            returnBody.options[option] = 0;
                         });
 
                         return returnBody;

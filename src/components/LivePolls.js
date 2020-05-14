@@ -59,7 +59,7 @@ const LivePolls = () => {
                     )}
                     {!polls.loading && livePolls && livePolls.length === 0 && (
                         <h2 className="subtitle has-text-centered">
-                            <span>No polls found</span>
+                            <span>No polls found </span>
                             <span className="icon">
                                 <i className="fas fa-thumbs-down" />
                             </span>
