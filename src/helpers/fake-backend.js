@@ -40,9 +40,11 @@ export function configureFakeBackend() {
                     case url.match(/\/polls\/votes$/) && method === 'GET':
                         return getVotesForAllClosed();
                     case url.endsWith('/users') && method === 'GET':
-                        return getUsers();
+                        return getAllUsers();
                     case url.match(/\/users\/\d+$/) && method === 'DELETE':
-                        return deleteUser();
+                        return removeUser();
+                    case url.match(/\/users\/\d+$/) && method === 'PATCH':
+                        return modifyAdminStatusUser();
                     default:
                         // pass through any requests not handled above
                         return realFetch(url, opts)
@@ -296,13 +298,17 @@ export function configureFakeBackend() {
                 return ok(responseBody);
             }
 
-            function getUsers() {
+            function getAllUsers() {
                 if (!isAdminLoggedIn()) return unauthorized();
-
-                return ok(users);
+                //remove passwords
+                let responseBody = users.map((user) => {
+                    const { password, ...userCopy } = user;
+                    return userCopy;
+                });
+                return ok(responseBody);
             }
 
-            function deleteUser() {
+            function removeUser() {
                 if (!isAdminLoggedIn()) return unauthorized();
 
                 users = users.filter((x) => x.id !== idFromUrl());
@@ -310,6 +316,17 @@ export function configureFakeBackend() {
                 return ok();
             }
 
+            function modifyAdminStatusUser() {
+                if (!isAdminLoggedIn()) return unauthorized();
+                const { isAdmin } = body;
+                let modifyForUser = users.find((x) => x.id === idFromUrl());
+                //console.log(modifyForUser, idFromUrl());
+                modifyForUser.isAdmin = isAdmin;
+                users = users.filter((x) => x.id !== idFromUrl());
+                users.push(modifyForUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                return ok();
+            }
             // helper functions
 
             function ok(body) {

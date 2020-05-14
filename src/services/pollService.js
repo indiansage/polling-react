@@ -30,65 +30,71 @@ function handleResponse(response) {
     });
 }
 
-function getAll() {
+async function getAll() {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${apiUrl}/polls`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/polls`, requestOptions);
+    return handleResponse(response);
 }
 
-function create(poll) {
+async function create(poll) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeader() },
         body: JSON.stringify(poll)
     };
 
-    return fetch(`${apiUrl}/polls/create`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/polls/create`, requestOptions);
+    return handleResponse(response);
 }
 
-function close(pollId) {
+async function close(pollId) {
     const requestOptions = {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', ...authHeader() },
         body: JSON.stringify({ live: false })
     };
 
-    return fetch(`${apiUrl}/polls/${pollId}`, requestOptions).then(
-        handleResponse
-    );
+    const response = await fetch(`${apiUrl}/polls/${pollId}`, requestOptions);
+    return handleResponse(response);
 }
 
-function vote(pollId, option) {
+async function vote(pollId, option) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeader() },
         body: JSON.stringify({ option })
     };
 
-    return fetch(`${apiUrl}/polls/${pollId}/vote`, requestOptions).then(
-        handleResponse
+    const response = await fetch(
+        `${apiUrl}/polls/${pollId}/vote`,
+        requestOptions
     );
+    return handleResponse(response);
 }
 
-function getVotes(pollId) {
+async function getVotes(pollId) {
     const requestOptions = {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', ...authHeader() }
+        headers: { ...authHeader() }
     };
 
-    return fetch(`${apiUrl}/polls/${pollId}/votes`, requestOptions).then(
-        handleResponse
+    const response = await fetch(
+        `${apiUrl}/polls/${pollId}/votes`,
+        requestOptions
     );
+    return handleResponse(response);
 }
 
-function getAllClosedPollsWithVotes() {
+async function getAllClosedPollsWithVotes() {
     const requestOptions = {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', ...authHeader() }
+        headers: { ...authHeader() }
     };
 
-    return fetch(`${apiUrl}/polls/votes`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/polls/votes`, requestOptions);
+    return handleResponse(response);
 }

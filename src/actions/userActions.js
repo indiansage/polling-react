@@ -7,8 +7,9 @@ export const userActions = {
     register,
     login,
     logout,
-    getAll,
-    delete: _delete
+    getAllUsers,
+    removeUser,
+    toggleAdminUser
 };
 function register(user, history) {
     let userDetails = {
@@ -82,45 +83,65 @@ function logout() {
     }
 }
 
-function getAll() {
+function getAllUsers() {
     return (dispatch) => {
         dispatch(request());
 
-        userService.getAll().then(
+        userService.getAllUsers().then(
             (users) => dispatch(success(users)),
             (error) => dispatch(failure(error.toString()))
         );
     };
 
     function request() {
-        return { type: constants.GETALL_REQUEST };
+        return { type: constants.GET_ALL_USERS_REQUEST };
     }
     function success(users) {
-        return { type: constants.GETALL_SUCCESS, users };
+        return { type: constants.GET_ALL_USERS_SUCCESS, users };
     }
     function failure(error) {
-        return { type: constants.GETALL_FAILURE, error };
+        return { type: constants.GET_ALL_USERS_FAILURE, error };
     }
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+function removeUser(id) {
     return (dispatch) => {
         dispatch(request(id));
 
-        userService.delete(id).then(
+        userService.removeUser(id).then(
             (user) => dispatch(success(id)),
             (error) => dispatch(failure(id, error.toString()))
         );
     };
 
     function request(id) {
-        return { type: constants.DELETE_REQUEST, id };
+        return { type: constants.REMOVE_USER_REQUEST, id };
     }
     function success(id) {
-        return { type: constants.DELETE_SUCCESS, id };
+        return { type: constants.REMOVE_USER_SUCCESS, id };
     }
     function failure(id, error) {
-        return { type: constants.DELETE_FAILURE, id, error };
+        return { type: constants.REMOVE_USER_FAILURE, id, error };
+    }
+}
+
+function toggleAdminUser(id, isAdmin) {
+    return (dispatch) => {
+        dispatch(request(id));
+
+        userService.toggleAdminUser(id, isAdmin).then(
+            (user) => dispatch(success(id)),
+            (error) => dispatch(failure(id, error.toString()))
+        );
+    };
+
+    function request(id) {
+        return { type: constants.TOGGLE_ADMIN_USER_REQUEST, id };
+    }
+    function success(id) {
+        return { type: constants.TOGGLE_ADMIN_USER_SUCCESS, id };
+    }
+    function failure(id, error) {
+        return { type: constants.TOGGLE_ADMIN_USER_FAILURE, id, error };
     }
 }

@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ClosedPolls from './ClosedPolls';
 import LivePolls from './LivePolls';
+import { UserList } from './UserList';
 import { pollActions } from '../actions/pollActions';
 
 const Home = () => {
     const user = useSelector((state) => state.authentication.user);
     const dispatch = useDispatch();
 
-    const [liveTabActive, setLiveTabActive] = useState(true);
+    const [activeTab, setActiveTab] = useState([true, false, false]);
 
     useEffect(() => {
         dispatch(pollActions.getAllPolls());
@@ -23,8 +24,10 @@ const Home = () => {
                     <div className="tabs is-toggle">
                         <ul>
                             <li
-                                className={liveTabActive ? 'is-active' : ''}
-                                onClick={() => setLiveTabActive(!liveTabActive)}
+                                className={activeTab[0] ? 'is-active' : ''}
+                                onClick={() =>
+                                    setActiveTab([true, false, false])
+                                }
                             >
                                 <a>
                                     <span className="icon">
@@ -37,8 +40,10 @@ const Home = () => {
                                 </a>
                             </li>
                             <li
-                                className={!liveTabActive ? 'is-active' : ''}
-                                onClick={() => setLiveTabActive(!liveTabActive)}
+                                className={activeTab[1] ? 'is-active' : ''}
+                                onClick={() =>
+                                    setActiveTab([false, true, false])
+                                }
                             >
                                 <a>
                                     <span className="icon">
@@ -50,19 +55,27 @@ const Home = () => {
                                     <span>Closed</span>
                                 </a>
                             </li>
+                            <li
+                                className={activeTab[2] ? 'is-active' : ''}
+                                onClick={() =>
+                                    setActiveTab([false, false, true])
+                                }
+                            >
+                                <a>
+                                    <span className="icon">
+                                        <i
+                                            className="fas fa-users"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </span>
+                                    <span>List of Users</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                    {liveTabActive && <LivePolls />}
-                    {!liveTabActive && <ClosedPolls />}
-                    {/* <section className="section">
-                    <div className="container">
-                        <div className="columns is-multiline">
-                            {users.error && (
-                    <span className="text-danger">ERROR: {users.error}</span>
-                )}
-                        </div>
-                    </div>
-                </section> */}
+                    {activeTab[0] && <LivePolls />}
+                    {activeTab[1] && <ClosedPolls />}
+                    {activeTab[2] && <UserList />}
                 </div>
             </>
         );

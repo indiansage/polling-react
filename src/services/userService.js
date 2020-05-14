@@ -1,14 +1,15 @@
 import { apiUrl } from '../constants';
-//import { authHeader } from '../_helpers';
+import { authHeader } from '../helpers/auth-header';
 
 export const userService = {
     login,
     logout,
     register,
-    getAll,
+    getAllUsers,
     getById,
     update,
-    delete: _delete
+    removeUser,
+    toggleAdminUser
 };
 
 //helper function
@@ -30,32 +31,32 @@ function handleResponse(response) {
     });
 }
 
-function register(user) {
+async function register(user) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
 
-    return fetch(`${apiUrl}/users/register`, requestOptions).then(
-        handleResponse
-    );
+    const response = await fetch(`${apiUrl}/users/register`, requestOptions);
+    return handleResponse(response);
 }
 
-function login(username, password) {
+async function login(username, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
 
-    return fetch(`${apiUrl}/users/authenticate`, requestOptions)
-        .then(handleResponse)
-        .then((user) => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
-            return user;
-        });
+    const response = await fetch(
+        `${apiUrl}/users/authenticate`,
+        requestOptions
+    );
+    const user = await handleResponse(response);
+    // store user details and jwt token in local storage to keep user logged in between page refreshes
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
 }
 
 function logout() {
@@ -63,42 +64,54 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function getAll() {
+async function getAllUsers() {
     const requestOptions = {
-        method: 'GET'
-        //headers: authHeader()
+        method: 'GET',
+        headers: { ...authHeader() }
     };
 
-    return fetch(`${apiUrl}/users`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/users`, requestOptions);
+    return handleResponse(response);
 }
 
-function getById(id) {
+async function getById(id) {
     const requestOptions = {
-        method: 'GET'
-        //headers: authHeader()
+        method: 'GET',
+        headers: { ...authHeader() }
     };
 
-    return fetch(`${apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/users/${id}`, requestOptions);
+    return handleResponse(response);
 }
 
-function update(user) {
+async function update(user) {
     const requestOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }, //...authHeader()
         body: JSON.stringify(user)
     };
 
-    return fetch(`${apiUrl}/users/${user.id}`, requestOptions).then(
-        handleResponse
-    );
+    const response = await fetch(`${apiUrl}/users/${user.id}`, requestOptions);
+    return handleResponse(response);
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+async function removeUser(id) {
     const requestOptions = {
-        method: 'DELETE'
-        //headers: authHeader()
+        method: 'DELETE',
+        headers: { ...authHeader() }
     };
 
-    return fetch(`${apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    const response = await fetch(`${apiUrl}/users/${id}`, requestOptions);
+    return handleResponse(response);
+}
+
+async function toggleAdminUser(id, isAdmin) {
+    const requestOptions = {
+        method: 'PATCH',
+        headers: { ...authHeader() },
+        body: JSON.stringify({ isAdmin: !isAdmin })
+    };
+
+    const response = await fetch(`${apiUrl}/users/${id}`, requestOptions);
+    return handleResponse(response);
 }
