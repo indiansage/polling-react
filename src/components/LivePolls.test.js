@@ -88,7 +88,7 @@ describe('<LivePolls />', () => {
                 }
             ]
         };
-        initialState.authentication.user.isAdmin = true;
+        //initialState.authentication.user.isAdmin = true;
 
         const { getAllByTestId } = render(
             <Provider store={configureStore(initialState)}>

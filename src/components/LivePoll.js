@@ -59,7 +59,7 @@ const LivePoll = ({ poll }) => {
                                     <button
                                         className={
                                             'button is-primary is-light' +
-                                            (voting[poll.id]
+                                            (voting && voting[poll.id]
                                                 ? ' is-loading'
                                                 : '')
                                         }
@@ -76,7 +76,7 @@ const LivePoll = ({ poll }) => {
                                     <button
                                         className={
                                             'button is-primary' +
-                                            (closing[poll.id]
+                                            (closing && closing[poll.id]
                                                 ? ' is-loading'
                                                 : '')
                                         }

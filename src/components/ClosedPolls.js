@@ -9,10 +9,14 @@ const ClosedPolls = () => {
     const closedPollsWithVotes = useSelector(
         (state) => state.polls.closedPollsWithVotes
     );
-    console.log('closedPollsWithVotes', closedPollsWithVotes);
+    //console.log('closedPollsWithVotes', closedPollsWithVotes);
+    // const dispatchGetClosedPollsWithVotes = useCallback(() => {
+
+    // }, [dispatch]);
+
     useEffect(() => {
         dispatch(pollActions.getClosedPollsWithVotes());
-    }, []);
+    }, [dispatch]);
 
     //const { closedPolls } = polls;
     return (

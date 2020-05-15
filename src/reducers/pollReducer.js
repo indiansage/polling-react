@@ -1,6 +1,6 @@
 import { constants } from '../constants';
 
-const initialState = { showCreatePollModal: false, voting: {}, closing: {} };
+const initialState = { showCreatePollModal: false, voting: [], closing: [] };
 
 export function polls(state = initialState, action) {
     switch (action.type) {

@@ -15,7 +15,7 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(pollActions.getAllPolls());
-    }, []);
+    }, [dispatch]);
 
     if (user.isAdmin) {
         return (

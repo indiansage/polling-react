@@ -1,6 +1,8 @@
 import { constants } from '../constants';
 
-export function users(state = {}, action) {
+const initialState = {};
+
+export function users(state = initialState, action) {
     switch (action.type) {
         case constants.GET_ALL_USERS_REQUEST:
             return {

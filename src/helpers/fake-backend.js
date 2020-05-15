@@ -168,7 +168,7 @@ export function configureFakeBackend() {
                 ); //find all votes for question
                 //console.log(Boolean(question));
                 if (!question) {
-                    console.log('question');
+                    //console.log('question');
                     const questionIsLive = polls.find(
                         (x) => x.id === qid && x.live
                     );
@@ -257,7 +257,7 @@ export function configureFakeBackend() {
                     const question = votesByQuestion.find(
                         (question) => poll.id === question.qid
                     );
-                    console.log('   ', 'question', question);
+                    //console.log('   ', 'question', question);
                     let returnBody = {};
 
                     if (!question) {

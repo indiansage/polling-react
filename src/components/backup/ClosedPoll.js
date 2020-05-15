@@ -19,7 +19,7 @@ class ClosedPoll extends Component {
     componentDidMount() {
         const { poll } = this.props;
         //poll object -> {qid,question,options:{{[option]:votes},{[option]:votes},...}}
-        console.log('poll', poll);
+        //console.log('poll', poll);
 
         const pieChartData = [];
         poll.options.forEach((option, index) => {

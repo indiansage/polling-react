@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { pollActions } from '../actions/pollActions';
@@ -18,11 +18,19 @@ const CreatePoll = () => {
     );
     const dispatch = useDispatch();
 
+    const clearFormValues = useCallback((fromLivePolls = false) => {
+        setQuestion('');
+        fromLivePolls
+            ? setOptions(['', ''])
+            : setOptions((options) => options.map(() => ''));
+
+        setSubmitted(false);
+    }, []);
+
     useEffect(() => {
-        console.log('useEffect');
         clearFormValues(true);
         setSubmitted(false);
-    }, [showCreatePollModal]);
+    }, [showCreatePollModal, clearFormValues]);
 
     function addOption(e) {
         e.preventDefault();
@@ -81,15 +89,6 @@ const CreatePoll = () => {
         if (question && options.every((val) => val) && noDuplicates) {
             dispatch(pollActions.createPoll(poll));
         }
-    }
-
-    function clearFormValues(fromLivePolls = false) {
-        setQuestion('');
-        fromLivePolls
-            ? setOptions(['', ''])
-            : setOptions(options.map(() => ''));
-
-        setSubmitted(false);
     }
 
     return (
