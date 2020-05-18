@@ -105,17 +105,20 @@ class UserList extends Component {
     }
 }
 
-function mapState(state) {
+function mapStateToProps(state) {
     const { users, authentication } = state;
     const { user } = authentication;
     return { user, users };
 }
 
-const actionCreators = {
+const mapDispatchToProps = {
     getAllUsers: userActions.getAllUsers,
     removeUser: userActions.removeUser,
     toggleAdminUser: userActions.toggleAdminUser
 };
 
-const connectedUserList = connect(mapState, actionCreators)(UserList);
+export const connectedUserList = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserList);
 export { connectedUserList as UserList };
