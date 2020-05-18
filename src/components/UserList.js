@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import SearchBox from './SearchBox';
 import { userActions } from '../actions/userActions';
 
 class UserList extends Component {
@@ -18,6 +19,7 @@ class UserList extends Component {
 
     render() {
         const { users } = this.props;
+
         return (
             <div /*className="col-md-6 col-md-offset-3"*/>
                 {/* <h1>Hi {user.firstName}!</h1> */}
@@ -26,7 +28,7 @@ class UserList extends Component {
                         <h1 className="title has-text-centered-mobile">
                             List of Users
                         </h1>
-
+                        <SearchBox />
                         {users.loading && <em>Loading users...</em>}
                         {users.error && <span>ERROR: {users.error}</span>}
                         {users.items && (
