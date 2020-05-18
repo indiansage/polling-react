@@ -46,6 +46,7 @@ async function create(poll) {
         headers: { 'Content-Type': 'application/json', ...authHeader() },
         body: JSON.stringify(poll)
     };
+    console.log('requestOptions', requestOptions);
 
     const response = await fetch(`${apiUrl}/polls/create`, requestOptions);
     return handleResponse(response);

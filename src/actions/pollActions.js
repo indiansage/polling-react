@@ -37,15 +37,17 @@ function getAllPolls() {
     }
 }
 
-function createPoll(poll) {
-    poll.live = true;
+function createPoll(polls) {
+    polls.map((poll) => {
+        poll.live = true;
+    });
     return (dispatch) => {
         dispatch(request());
-        pollService.create(poll).then(
-            () => {
+        pollService.create(polls).then(
+            (successMsg) => {
                 dispatch(success());
                 dispatch(toggleCreatePollModal());
-                dispatch(alertActions.success('Creation of poll successful'));
+                dispatch(alertActions.success(successMsg));
                 dispatch(getAllPolls());
             },
             (error) => {

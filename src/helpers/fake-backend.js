@@ -127,19 +127,29 @@ export function configureFakeBackend() {
             function createPoll() {
                 if (!isAdminLoggedIn()) return unauthorized();
                 const poll = body;
-
-                if (polls.find((x) => x.question === poll.question && x.live)) {
-                    return error('This question is already live');
+                let errorCount = 0;
+                poll.forEach((p) => {
+                    if (
+                        polls.find((x) => x.question === p.question && x.live)
+                    ) {
+                        errorCount++;
+                    } else {
+                        p.id = polls.length
+                            ? Math.max(...polls.map((x) => x.id)) + 1
+                            : 1;
+                        polls.push(p);
+                    }
+                });
+                if (errorCount === poll.length) {
+                    return error('All the questions are already live!');
+                } else if (errorCount > 0) {
+                    return ok(
+                        'Some polls were already live, remaining created successfully!'
+                    );
+                } else {
+                    localStorage.setItem('polls', JSON.stringify(polls));
+                    return ok('Created successfully!');
                 }
-
-                // structure of polls object : [{id,live,question,options:[option,option,...]},{id,live,question,options:[option,option,...]},...]
-                poll.id = polls.length
-                    ? Math.max(...polls.map((x) => x.id)) + 1
-                    : 1;
-                polls.push(poll);
-                localStorage.setItem('polls', JSON.stringify(polls));
-
-                return ok();
             }
 
             function modifyStatusPoll() {

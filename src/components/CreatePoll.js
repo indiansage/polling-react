@@ -4,11 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { pollActions } from '../actions/pollActions';
 
 const CreatePoll = () => {
-    const [question, setQuestion] = useState('');
-    const [options, setOptions] = useState(['', '']);
-    const [duplicateValidationFlags, setDuplicateValidationFlags] = useState(
+    const [questions, setQuestions] = useState(['']);
+    const [options, setOptions] = useState([['', '']]);
+    const [duplicateValidationQFlags, setDuplicateValidationQFlags] = useState(
         []
     );
+    const [duplicateValidationFlags, setDuplicateValidationFlags] = useState([
+        []
+    ]);
+    const [currentPage, setCurrentPage] = useState(0); //first page is 0
 
     const [submitted, setSubmitted] = useState(false);
 
@@ -18,78 +22,197 @@ const CreatePoll = () => {
     );
     const dispatch = useDispatch();
 
-    const clearFormValues = useCallback((fromLivePolls = false) => {
-        setQuestion('');
-        fromLivePolls
-            ? setOptions(['', ''])
-            : setOptions((options) => options.map(() => ''));
+    const clearFormValues = (fromLivePolls = false) => {
+        const updatedQuestions = questions;
+        updatedQuestions[currentPage] = '';
+        setQuestions(updatedQuestions);
+        if (fromLivePolls) {
+            setQuestions(['']);
+            setOptions([['', '']]);
+            setCurrentPage(0);
+        } else {
+            const updatedQuestions = [...questions];
+            updatedQuestions[currentPage] = '';
+            setQuestions(updatedQuestions);
+            const updatedOptions = [...options];
+            updatedOptions[currentPage] = updatedOptions[currentPage].map(
+                () => ''
+            );
+            setOptions(updatedOptions);
+        }
 
         setSubmitted(false);
-    }, []);
+    };
 
     useEffect(() => {
         clearFormValues(true);
         setSubmitted(false);
-    }, [showCreatePollModal, clearFormValues]);
+    }, [showCreatePollModal]);
+
+    function addQuestion(e) {
+        e.preventDefault();
+        let updatedQuestions = [...questions, ''];
+        setQuestions(updatedQuestions);
+        setSubmitted(false);
+    }
+
+    useEffect(() => {
+        if (options.length < questions.length) {
+            let updatedOptions = [...options];
+            updatedOptions.push(['', '']);
+            setOptions(updatedOptions);
+            setCurrentPage(questions.length - 1);
+        }
+        if (options.length > questions.length) {
+            let updatedOptions = [...options];
+            updatedOptions.pop();
+            setOptions(updatedOptions);
+        }
+    }, [questions]);
+
+    function removeQuestion(e) {
+        e.preventDefault();
+        const updatedQuestions = [...questions];
+
+        updatedQuestions.pop();
+        if (updatedQuestions.length === currentPage) {
+            setCurrentPage(currentPage - 1);
+        }
+        setQuestions(updatedQuestions);
+    }
+
+    function nextPage(e) {
+        e.preventDefault();
+        setCurrentPage((currentPage + 1) % questions.length);
+    }
+
+    function prevPage(e) {
+        e.preventDefault();
+        let page = currentPage - 1;
+        if (page < 0) {
+            setCurrentPage(questions.length + page);
+        } else {
+            setCurrentPage(page);
+        }
+    }
 
     function addOption(e) {
         e.preventDefault();
-        setOptions([...options, '']);
+        const updatedOptions = [...options];
+        updatedOptions[currentPage] = [...updatedOptions[currentPage], ''];
+        setOptions(updatedOptions);
     }
 
     function removeOption(e) {
         e.preventDefault();
         const updatedOptions = [...options];
-        updatedOptions.pop();
+        updatedOptions[currentPage] = [...updatedOptions[currentPage]];
+        updatedOptions[currentPage].pop();
         setOptions(updatedOptions);
     }
 
     function handleChangeQuestion(e) {
-        setQuestion(e.target.value);
+        const updatedQuestions = [...questions];
+        updatedQuestions[currentPage] = e.target.value;
+        setQuestions(updatedQuestions);
     }
 
     function handleChangeOptions(e) {
         const updatedOptions = [...options];
-
+        updatedOptions[currentPage] = [...updatedOptions[currentPage]];
         const splitName = e.target.name.split('-');
         const index = splitName[splitName.length - 1];
-        updatedOptions[index] = e.target.value;
+        updatedOptions[currentPage][index] = e.target.value;
 
         setOptions(updatedOptions);
     }
 
     function handleSubmit(e) {
         e.preventDefault();
+        const polls = [];
 
         //validate duplicate options in form
         let noDuplicates = true;
-        let duplicateCountMap = new Map();
-        let duplicateFlags = [];
-        options.forEach((option) => {
-            if (duplicateCountMap.has(option)) {
-                duplicateCountMap.set(
-                    option,
-                    duplicateCountMap.get(option) + 1
+        let firstDuplicate = -1;
+        questions.forEach((_questionVal, questionIndex, questionsArr) => {
+            let duplicateCountMapArray = new Array(questionsArr.length);
+            duplicateCountMapArray[questionIndex] = new Map();
+            let duplicateFlags = new Array(questionsArr.length);
+            options[questionIndex].forEach((option) => {
+                if (duplicateCountMapArray[questionIndex].has(option)) {
+                    duplicateCountMapArray[questionIndex].set(
+                        option,
+                        duplicateCountMapArray[questionIndex].get(option) + 1
+                    );
+                    noDuplicates = false;
+                    firstDuplicate = questionIndex;
+                } else {
+                    duplicateCountMapArray[questionIndex].set(option, 1);
+                }
+            });
+            options[questionIndex].forEach((option, index) => {
+                if (!duplicateFlags[questionIndex]) {
+                    duplicateFlags[questionIndex] = [];
+                }
+                duplicateFlags[questionIndex][index] =
+                    duplicateCountMapArray[questionIndex].get(option) > 1
+                        ? true
+                        : false;
+            });
+            setDuplicateValidationFlags(duplicateFlags);
+
+            polls.push({
+                question: questions[questionIndex],
+                options: options[questionIndex]
+            });
+        });
+
+        //validate duplicate questions in form
+        let noDuplicateQs = true;
+        let duplicateFlagQs = [];
+        let firstDuplicateQ = -1;
+        let duplicateCountMapQ = new Map();
+        questions.forEach((question, index) => {
+            if (duplicateCountMapQ.has(question)) {
+                duplicateCountMapQ.set(
+                    question,
+                    duplicateCountMapQ.get(question) + 1
                 );
                 noDuplicates = false;
+                firstDuplicateQ = index;
             } else {
-                duplicateCountMap.set(option, 1);
+                duplicateCountMapQ.set(question, 1);
             }
         });
-        options.forEach((option, index) => {
-            duplicateFlags[index] =
-                duplicateCountMap.get(option) > 1 ? true : false;
+        questions.forEach((option, index) => {
+            duplicateFlagQs[index] =
+                duplicateCountMapQ.get(option) > 1 ? true : false;
         });
-        setDuplicateValidationFlags(duplicateFlags);
-
-        const poll = { question, options };
+        setDuplicateValidationQFlags(duplicateFlagQs);
 
         setSubmitted(true);
-
-        if (question && options.every((val) => val) && noDuplicates) {
-            dispatch(pollActions.createPoll(poll));
+        if (!questions.every((val) => val)) {
+            setCurrentPage(questions.findIndex((val) => !val));
+        } else if (!noDuplicateQs) {
+            setCurrentPage(firstDuplicateQ);
+        } else if (!options.every((arr) => arr.every((val) => val))) {
+            setCurrentPage(
+                options.findIndex((arr) => !arr.every((val) => val))
+            );
+        } else if (!noDuplicates) {
+            setCurrentPage(firstDuplicate);
+        } else {
+            //console.log(polls);
+            dispatch(pollActions.createPoll(polls));
         }
     }
+
+    // console.log(
+    //     options[currentPage] &&
+    //         options[currentPage][1] &&
+    //         duplicateValidationFlags[currentPage] &&
+    //         duplicateValidationFlags[currentPage][1]
+    // );
 
     return (
         <div
@@ -100,62 +223,160 @@ const CreatePoll = () => {
             <div className="modal-card">
                 <header className="modal-card-head">
                     <p className="modal-card-title">Create a poll</p>
+                    <div className="buttons">
+                        <button
+                            className="button is-primary"
+                            onClick={addQuestion}
+                            disabled={questions.length === 5}
+                        >
+                            <span>Question</span>
+                            <span className="icon">
+                                <i className="fas fa-plus" />
+                            </span>
+                        </button>
+                        <button
+                            className="button is-primary"
+                            onClick={removeQuestion}
+                            disabled={questions.length === 1}
+                        >
+                            <span>Question</span>
+                            <span className="icon">
+                                <i className="fas fa-minus" />
+                            </span>
+                        </button>
+                    </div>
                 </header>
-                <section className="modal-card-body">
-                    <form onSubmit={handleSubmit}>
+
+                <section className="modal-card-body create-poll-modal-body">
+                    <button
+                        className="button create-poll-modal-arrow"
+                        style={{ marginRight: '1rem' }}
+                        onClick={prevPage}
+                        disabled={questions.length === 1}
+                    >
+                        <span className="icon">
+                            <i className="fas fa-arrow-left"></i>
+                        </span>
+                    </button>
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="create-poll-modal-form"
+                    >
                         <div className="field">
-                            <label className="label">Question</label>
+                            <label className="label">{`Question (${
+                                currentPage + 1
+                            }/${questions.length})`}</label>
                             <div className="control">
                                 <textarea
                                     name="question"
-                                    value={question}
+                                    value={questions[currentPage]}
                                     onChange={handleChangeQuestion}
                                     className="textarea"
                                 />
-                                {submitted && !question && (
+                                {submitted && !questions[currentPage] && (
                                     <p className="help is-danger">
                                         Question is required
                                     </p>
                                 )}
-                            </div>
-                        </div>
-                        {options.map((_val, index) => {
-                            const optionId = `option-${index}`;
-                            return (
-                                <div className="field" key={optionId}>
-                                    <label className="label">{`Option ${
-                                        index + 1
-                                    }`}</label>
-                                    <input
-                                        type="text"
-                                        name={optionId}
-                                        className="input"
-                                        onChange={handleChangeOptions}
-                                        value={options[index]}
-                                    />
-                                    {submitted && !options[index] && (
+                                {submitted &&
+                                    questions[currentPage] &&
+                                    duplicateValidationQFlags[currentPage] && (
                                         <p className="help is-danger">
-                                            {index > 1
-                                                ? `Option ${
-                                                      index + 1
-                                                  } is required. Remove if not required.`
-                                                : `Option ${
-                                                      index + 1
-                                                  } is required.`}
+                                            {'Questions cannot be identical.'}
                                         </p>
                                     )}
-                                    {submitted &&
-                                        options[index] &&
-                                        duplicateValidationFlags[index] && (
-                                            <p className="help is-danger">
-                                                {'Options cannot be identical.'}
-                                            </p>
-                                        )}
-                                </div>
-                            );
-                        })}
+                            </div>
+                        </div>
+                        {options[currentPage] &&
+                            options[currentPage].map((_val, index) => {
+                                const optionId = `option-${index}`;
+                                return (
+                                    <div className="field" key={optionId}>
+                                        <label className="label">{`Option ${
+                                            index + 1
+                                        }`}</label>
+                                        <input
+                                            type="text"
+                                            name={optionId}
+                                            className="input"
+                                            onChange={handleChangeOptions}
+                                            value={
+                                                options[currentPage] &&
+                                                options[currentPage][index]
+                                            }
+                                        />
+                                        {submitted &&
+                                            !(
+                                                options[currentPage] &&
+                                                options[currentPage][index]
+                                            ) && (
+                                                <p className="help is-danger">
+                                                    {index > 1
+                                                        ? `Option ${
+                                                              index + 1
+                                                          } is required. Remove if not required.`
+                                                        : `Option ${
+                                                              index + 1
+                                                          } is required.`}
+                                                </p>
+                                            )}
+                                        {submitted &&
+                                            options[currentPage] &&
+                                            options[currentPage][index] &&
+                                            duplicateValidationFlags[
+                                                currentPage
+                                            ] &&
+                                            duplicateValidationFlags[
+                                                currentPage
+                                            ][index] && (
+                                                <p className="help is-danger">
+                                                    {
+                                                        'Options cannot be identical.'
+                                                    }
+                                                </p>
+                                            )}
+                                    </div>
+                                );
+                            })}
+                        <div className="buttons is-pulled-right">
+                            <button
+                                className="button is-primary"
+                                onClick={addOption}
+                            >
+                                <span>Option</span>
+                                <span className="icon">
+                                    <i className="fas fa-plus"></i>
+                                </span>
+                            </button>
+                            <button
+                                className="button is-primary"
+                                onClick={removeOption}
+                                disabled={
+                                    options[currentPage] &&
+                                    options[currentPage].length < 3
+                                }
+                            >
+                                <span>Option</span>
+                                <span className="icon">
+                                    <i className="fas fa-minus"></i>
+                                </span>
+                            </button>
+                        </div>
                     </form>
+
+                    <button
+                        className="button create-poll-modal-arrow"
+                        style={{ marginLeft: '1rem' }}
+                        onClick={nextPage}
+                        disabled={questions.length === 1}
+                    >
+                        <span className="icon">
+                            <i className="fas fa-arrow-right"></i>
+                        </span>
+                    </button>
                 </section>
+
                 <footer className="modal-card-foot">
                     <button
                         className={
@@ -185,26 +406,6 @@ const CreatePoll = () => {
                     >
                         Clear
                     </button>
-
-                    <div className="buttons">
-                        <button
-                            className="button is-primary"
-                            onClick={addOption}
-                        >
-                            <span className="icon">
-                                <i className="fas fa-plus"></i>
-                            </span>
-                        </button>
-                        <button
-                            className="button is-primary"
-                            onClick={removeOption}
-                            disabled={options.length < 3}
-                        >
-                            <span className="icon">
-                                <i className="fas fa-minus"></i>
-                            </span>
-                        </button>
-                    </div>
                 </footer>
             </div>
         </div>
