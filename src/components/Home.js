@@ -20,10 +20,11 @@ const Home = () => {
     if (user.isAdmin) {
         return (
             <>
-                <div className="container">
+                <div className="container is-fluid">
                     <div className="tabs is-toggle">
                         <ul>
                             <li
+                                data-testid="LiveTab"
                                 className={activeTab[0] ? 'is-active' : ''}
                                 onClick={() =>
                                     setActiveTab([true, false, false])
@@ -40,6 +41,7 @@ const Home = () => {
                                 </a>
                             </li>
                             <li
+                                data-testid="ClosedTab"
                                 className={activeTab[1] ? 'is-active' : ''}
                                 onClick={() =>
                                     setActiveTab([false, true, false])
@@ -56,6 +58,7 @@ const Home = () => {
                                 </a>
                             </li>
                             <li
+                                data-testid="ListOfUsersTab"
                                 className={activeTab[2] ? 'is-active' : ''}
                                 onClick={() =>
                                     setActiveTab([false, false, true])

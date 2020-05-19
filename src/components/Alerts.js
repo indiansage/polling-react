@@ -15,7 +15,7 @@ const Alerts = () => {
     }, [dispatch, history]);
     return (
         <div
-            className="columns"
+            className="columns is-mobile"
             style={{ marginTop: '1rem', minHeight: '4rem' }}
             data-testid="Alerts"
         >
@@ -23,10 +23,12 @@ const Alerts = () => {
                 <div
                     className="column is-offset-3 is-6"
                     style={{ padding: '0' }}
+                    data-testid="AlertMsg"
                 >
                     <div className={`notification ${alert.type}`}>
                         <button
                             className="delete"
+                            data-testid="CloseAlert"
                             onClick={() => {
                                 // clear alert
                                 dispatch(alertActions.clear());

@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap')
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap')
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;900&display=swap')
 @import "node_modules/bulma/sass/utilities/initial-variables"
 
 //Customization: above line is required to find initial
@@ -14,7 +14,42 @@ $family-secondary: 'Montserrat Alternates', $family-sans-serif
 @import "node_modules/bulma/bulma"
 
 .logo
-    font-family: 'Indie Flower', cursive
+    font-family: $family-primary
+    color: #ffffff
+    font-weight: 900
+
+.burger-res
+    top: 0.4rem
+
+.fade-rule
+    height: 0.1px
+    background-color: $primary-light
+    width: auto
+    margin: 0 0
+    // background-image: linear-gradient(left , white 2%, #E6E6E6 50%, white 98%)
+    // background-image: -o-linear-gradient(left , white 2%, #E6E6E6 50%, white 98%)
+    // background-image: -moz-linear-gradient(left , white 2%, #E6E6E6 50%, white 98%)
+    // background-image: -webkit-linear-gradient(left , white 2%, #E6E6E6 50%, white 98%)
+    // background-image: -ms-linear-gradient(left , white 2%, #E6E6E6 50%, white 98%)
+    // background-image: -webkit-gradient( linear, left bottom, right bottom, color-stop(0.02, white), color-stop(0.5, gray), color-stop(0.98, white) )
+
+.login-box
+    box-shadow: 5px 5px 10px 4px $primary-light, -5px -5px 10px 4px $primary-light
+//   width: 200px;
+//   margin: 20px;
+//   height: 150px;
+//   border: 1px solid #ccc;
+//   padding: 10px;
+    //transition: box-shadow 0.2s ease-in-out
+//, transform 0.35s ease-in-out
+
+//.login-box:hover
+    //box-shadow: 5px 5px 10px 4px $primary-light, -5px -5px 10px 4px $primary-light
+    //transform: translateY(-5px)
+
+.pill-form-header
+    font-family: $family-primary
+    font-weight: 600
 
 .pill-form
     display: flex

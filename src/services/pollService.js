@@ -90,7 +90,7 @@ async function getVotes(pollId) {
     return handleResponse(response);
 }
 
-async function getAllClosedPollsWithVotes() {
+export async function getAllClosedPollsWithVotes() {
     const requestOptions = {
         method: 'GET',
         headers: { ...authHeader() }

@@ -5,12 +5,10 @@ const ClosedPoll = ({ poll }) => {
     const pieChartData = [];
 
     Object.keys(poll.options).forEach((key) => {
-        console.log(key, poll.options[key]);
-
         pieChartData.push({ name: key, value: poll.options[key] });
     });
     return (
-        <div className="box">
+        <div className="box" data-testid="PieChart">
             <PieChart title={poll.question} data={pieChartData} />
         </div>
     );

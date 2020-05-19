@@ -37,8 +37,9 @@ async function register(user) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
-
+    console.log('req', user);
     const response = await fetch(`${apiUrl}/users/register`, requestOptions);
+    console.log('resp', response);
     return handleResponse(response);
 }
 

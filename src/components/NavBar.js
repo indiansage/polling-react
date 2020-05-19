@@ -12,7 +12,7 @@ const NavBar = () => {
     const user = useSelector((state) => state.authentication.user);
 
     return (
-        <nav className="navbar is-fixed-top is-light" data-testid="NavBar">
+        <nav className="navbar is-fixed-top is-primary" data-testid="NavBar">
             <div className="container">
                 <div className="navbar-brand">
                     <Link to="/">
@@ -22,8 +22,8 @@ const NavBar = () => {
                     </Link>
                     <div
                         role="button"
-                        className={`navbar-burger burger ${
-                            isActive ? 'is-active' : ''
+                        className={`navbar-burger burger-res burger${
+                            isActive ? ' is-active' : ''
                         }`}
                         data-target="navMenu"
                         onClick={() => {

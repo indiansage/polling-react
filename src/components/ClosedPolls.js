@@ -20,35 +20,38 @@ const ClosedPolls = () => {
 
     //const { closedPolls } = polls;
     return (
-        <div className="box">
-            <div className="container">
-                <h1 className="title has-text-centered-mobile">Closed</h1>
-                {closedPollsWithVotes && closedPollsWithVotes.loading && (
-                    <progress className="progress is-primary" max="100" />
+        <div className="container">
+            <h1
+                className="title has-text-centered-mobile"
+                data-testid="ClosedTitle"
+            >
+                Closed
+            </h1>
+            {closedPollsWithVotes && closedPollsWithVotes.loading && (
+                <progress className="progress is-primary" max="100" />
+            )}
+            {closedPollsWithVotes &&
+                !closedPollsWithVotes.loading &&
+                closedPollsWithVotes.items.length === 0 && (
+                    <>
+                        <br />
+                        <h2 className="subtitle has-text-centered">
+                            <span>No polls found </span>
+                            <span className="icon">
+                                <i className="fas fa-thumbs-down" />
+                            </span>
+                        </h2>
+                    </>
                 )}
-                {closedPollsWithVotes &&
-                    !closedPollsWithVotes.loading &&
-                    closedPollsWithVotes.items.length === 0 && (
-                        <>
-                            <br />
-                            <h2 className="subtitle has-text-centered">
-                                <span>No polls found </span>
-                                <span className="icon">
-                                    <i className="fas fa-thumbs-down" />
-                                </span>
-                            </h2>
-                        </>
-                    )}
-                {closedPollsWithVotes && !closedPollsWithVotes.loading && (
-                    <div className="columns is-multiline">
-                        {closedPollsWithVotes.items.map((poll, index) => (
-                            <div className="column is-4" key={poll.qid}>
-                                <ClosedPoll poll={poll} />
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            {closedPollsWithVotes && !closedPollsWithVotes.loading && (
+                <div className="columns is-multiline">
+                    {closedPollsWithVotes.items.map((poll, index) => (
+                        <div className="column is-4" key={poll.qid}>
+                            <ClosedPoll poll={poll} />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

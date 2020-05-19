@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Home /> Compares with existing modal window snapshot when "Create Poll" button is clicked,  1`] = `
+exports[`<Home /> for admin user Compares with existing modal window snapshot when "Create Poll" button is clicked 1`] = `
 <div
   class="modal is-active"
   data-testid="CreatePollModal"
@@ -19,18 +19,66 @@ exports[`<Home /> Compares with existing modal window snapshot when "Create Poll
       >
         Create a poll
       </p>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button is-primary"
+        >
+          <span>
+            Question
+          </span>
+          <span
+            class="icon"
+          >
+            <i
+              class="fas fa-plus"
+            />
+          </span>
+        </button>
+        <button
+          class="button is-primary"
+          disabled=""
+        >
+          <span>
+            Question
+          </span>
+          <span
+            class="icon"
+          >
+            <i
+              class="fas fa-minus"
+            />
+          </span>
+        </button>
+      </div>
     </header>
     <section
-      class="modal-card-body"
+      class="modal-card-body create-poll-modal-body"
     >
-      <form>
+      <button
+        class="button create-poll-modal-arrow"
+        disabled=""
+        style="margin-right: 1rem;"
+      >
+        <span
+          class="icon"
+        >
+          <i
+            class="fas fa-arrow-left"
+          />
+        </span>
+      </button>
+      <form
+        class="create-poll-modal-form"
+      >
         <div
           class="field"
         >
           <label
             class="label"
           >
-            Question
+            Question (1/1)
           </label>
           <div
             class="control"
@@ -71,7 +119,53 @@ exports[`<Home /> Compares with existing modal window snapshot when "Create Poll
             value=""
           />
         </div>
+        <div
+          class="buttons is-pulled-right"
+        >
+          <button
+            class="button is-primary"
+          >
+            <span>
+              Option
+            </span>
+            <span
+              class="icon"
+            >
+              <i
+                class="fas fa-plus"
+              />
+            </span>
+          </button>
+          <button
+            class="button is-primary"
+            disabled=""
+          >
+            <span>
+              Option
+            </span>
+            <span
+              class="icon"
+            >
+              <i
+                class="fas fa-minus"
+              />
+            </span>
+          </button>
+        </div>
       </form>
+      <button
+        class="button create-poll-modal-arrow"
+        disabled=""
+        style="margin-left: 1rem;"
+      >
+        <span
+          class="icon"
+        >
+          <i
+            class="fas fa-arrow-right"
+          />
+        </span>
+      </button>
     </section>
     <footer
       class="modal-card-foot"
@@ -100,33 +194,6 @@ exports[`<Home /> Compares with existing modal window snapshot when "Create Poll
       >
         Clear
       </button>
-      <div
-        class="buttons"
-      >
-        <button
-          class="button is-primary"
-        >
-          <span
-            class="icon"
-          >
-            <i
-              class="fas fa-plus"
-            />
-          </span>
-        </button>
-        <button
-          class="button is-primary"
-          disabled=""
-        >
-          <span
-            class="icon"
-          >
-            <i
-              class="fas fa-minus"
-            />
-          </span>
-        </button>
-      </div>
     </footer>
   </div>
 </div>

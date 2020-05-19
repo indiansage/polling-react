@@ -17,7 +17,7 @@ const LivePoll = ({ poll }) => {
 
     const onVoteClick = (e) => {
         e.preventDefault();
-        if (optionForm) dispatch(pollActions.vote(poll.id, optionForm));
+        dispatch(pollActions.vote(poll.id, optionForm));
     };
 
     const onCloseClick = (e) => {
@@ -29,8 +29,8 @@ const LivePoll = ({ poll }) => {
         <div className="box">
             <article className="media">
                 <div className="media-content">
-                    <div className="content">
-                        <strong>{poll.question}</strong>
+                    <div className="content pill-form-header">
+                        {poll.question}
                         <form className="pill-form">
                             {poll.options.map((option) => (
                                 <label
@@ -38,6 +38,7 @@ const LivePoll = ({ poll }) => {
                                     key={option}
                                     disabled={user.isAdmin}
                                     onClick={onRadioClick}
+                                    data-testid="radioButton"
                                 >
                                     <input
                                         type="radio"
@@ -57,6 +58,7 @@ const LivePoll = ({ poll }) => {
                             <span className="buttons">
                                 {!user.isAdmin && (
                                     <button
+                                        data-testid="VoteButton"
                                         className={
                                             'button is-primary is-light' +
                                             (voting && voting[poll.id]
@@ -74,6 +76,7 @@ const LivePoll = ({ poll }) => {
                                 )}
                                 {user.isAdmin && (
                                     <button
+                                        data-testid="CloseButton"
                                         className={
                                             'button is-primary' +
                                             (closing && closing[poll.id]

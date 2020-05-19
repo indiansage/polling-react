@@ -12,7 +12,6 @@ import './sass/main.sass';
 import configureStore from './helpers/store';
 
 import Login from './components/Login';
-import Welcome from './components/WelcomePage';
 import Register from './components/Register';
 import NavBar from './components/NavBar';
 import Alerts from './components/Alerts';
@@ -27,7 +26,6 @@ function App() {
                     <NavBar />
                     <Alerts />
                     <Switch>
-                        <Route exact path="/welcome" component={Welcome} />
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/register" component={Register} />
                         <PrivateRoute exact path="/" component={Home} />
