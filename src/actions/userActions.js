@@ -25,7 +25,7 @@ function register(user, history) {
             (userDetails) => {
                 dispatch(success());
                 history.push('/login');
-                dispatch(alertActions.success('Registration successful'));
+                dispatch(alertActions.success('Registration successful!'));
             },
             (error) => {
                 dispatch(failure(error.toString()));
@@ -52,7 +52,10 @@ function login(username, password, history) {
         userService.login(username, password).then(
             (user) => {
                 dispatch(success(user));
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('user', JSON.stringify(user));
                 history.push('/');
+                dispatch(alertActions.success('Logged in successfully!'));
             },
             (error) => {
                 dispatch(failure(error.toString()));

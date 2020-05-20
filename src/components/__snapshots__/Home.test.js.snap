@@ -79,15 +79,15 @@ exports[`<Home /> for admin user Compares with existing modal window snapshot wh
             class="label"
           >
             Question (1/1)
+            <div
+              class="control"
+            >
+              <textarea
+                class="textarea"
+                name="question"
+              />
+            </div>
           </label>
-          <div
-            class="control"
-          >
-            <textarea
-              class="textarea"
-              name="question"
-            />
-          </div>
         </div>
         <div
           class="field"
@@ -96,13 +96,13 @@ exports[`<Home /> for admin user Compares with existing modal window snapshot wh
             class="label"
           >
             Option 1
+            <input
+              class="input"
+              name="option-0"
+              type="text"
+              value=""
+            />
           </label>
-          <input
-            class="input"
-            name="option-0"
-            type="text"
-            value=""
-          />
         </div>
         <div
           class="field"
@@ -111,13 +111,13 @@ exports[`<Home /> for admin user Compares with existing modal window snapshot wh
             class="label"
           >
             Option 2
+            <input
+              class="input"
+              name="option-1"
+              type="text"
+              value=""
+            />
           </label>
-          <input
-            class="input"
-            name="option-1"
-            type="text"
-            value=""
-          />
         </div>
         <div
           class="buttons is-pulled-right"
@@ -172,6 +172,7 @@ exports[`<Home /> for admin user Compares with existing modal window snapshot wh
     >
       <button
         class="button is-primary"
+        data-testid="CreatePollConfirm"
       >
         <span>
           Create

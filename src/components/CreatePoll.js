@@ -264,48 +264,50 @@ const CreatePoll = () => {
                         className="create-poll-modal-form"
                     >
                         <div className="field">
-                            <label className="label">{`Question (${
-                                currentPage + 1
-                            }/${questions.length})`}</label>
-                            <div className="control">
-                                <textarea
-                                    name="question"
-                                    value={questions[currentPage]}
-                                    onChange={handleChangeQuestion}
-                                    className="textarea"
-                                />
-                                {submitted && !questions[currentPage] && (
+                            <label className="label">
+                                {`Question (${currentPage + 1}/${
+                                    questions.length
+                                })`}
+                                <div className="control">
+                                    <textarea
+                                        name="question"
+                                        value={questions[currentPage]}
+                                        onChange={handleChangeQuestion}
+                                        className="textarea"
+                                    />
+                                </div>
+                            </label>
+                            {submitted && !questions[currentPage] && (
+                                <p className="help is-danger">
+                                    Question is required
+                                </p>
+                            )}
+                            {submitted &&
+                                questions[currentPage] &&
+                                duplicateValidationQFlags[currentPage] && (
                                     <p className="help is-danger">
-                                        Question is required
+                                        {'Questions cannot be identical.'}
                                     </p>
                                 )}
-                                {submitted &&
-                                    questions[currentPage] &&
-                                    duplicateValidationQFlags[currentPage] && (
-                                        <p className="help is-danger">
-                                            {'Questions cannot be identical.'}
-                                        </p>
-                                    )}
-                            </div>
                         </div>
                         {options[currentPage] &&
                             options[currentPage].map((_val, index) => {
                                 const optionId = `option-${index}`;
                                 return (
                                     <div className="field" key={optionId}>
-                                        <label className="label">{`Option ${
-                                            index + 1
-                                        }`}</label>
-                                        <input
-                                            type="text"
-                                            name={optionId}
-                                            className="input"
-                                            onChange={handleChangeOptions}
-                                            value={
-                                                options[currentPage] &&
-                                                options[currentPage][index]
-                                            }
-                                        />
+                                        <label className="label">
+                                            {`Option ${index + 1}`}
+                                            <input
+                                                type="text"
+                                                name={optionId}
+                                                className="input"
+                                                onChange={handleChangeOptions}
+                                                value={
+                                                    options[currentPage] &&
+                                                    options[currentPage][index]
+                                                }
+                                            />
+                                        </label>
                                         {submitted &&
                                             !(
                                                 options[currentPage] &&
@@ -384,6 +386,7 @@ const CreatePoll = () => {
                             (creating ? ' is-loading' : '')
                         }
                         onClick={handleSubmit}
+                        data-testid="CreatePollConfirm"
                     >
                         <span>Create</span>
                         <span className="icon">

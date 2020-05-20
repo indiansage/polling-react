@@ -40,55 +40,61 @@ const Login = () => {
     return (
         <div className="container is-fluid" data-testid="Login">
             <div className="columns">
-                <div className="column is-offset-4 is-4">
+                <div className="column is-offset-3 is-6">
                     <div className="box login-box">
                         <h2 className="is-size-3">Login</h2>
 
                         <div className="fade-rule" />
                         <br />
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className="login-form">
                             <div className="field">
-                                <label className="label">Username</label>
-                                <div className="control has-icons-left">
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        value={username}
-                                        onChange={handleChange}
-                                        className="input"
-                                        placeholder="Enter username"
-                                    />
-                                    <span className="icon is-small is-left">
-                                        <i className="fas fa-user"></i>
-                                    </span>
-                                    {submitted && !username && (
-                                        <p className="help is-danger">
-                                            Username is required
-                                        </p>
-                                    )}
-                                </div>
+                                <label className="label">
+                                    Username
+                                    <div className="control has-icons-left">
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            value={username}
+                                            onChange={handleChange}
+                                            className="input"
+                                            placeholder="Enter username"
+                                        />
+                                        <span className="icon is-small is-left">
+                                            <i className="fas fa-user"></i>
+                                        </span>
+                                        {submitted && !username && (
+                                            <p className="help is-danger">
+                                                Username is required
+                                            </p>
+                                        )}
+                                    </div>
+                                </label>
                             </div>
+                            <br />
                             <div className="field">
-                                <label className="label">Password</label>
-                                <div className="control has-icons-left">
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        value={password}
-                                        onChange={handleChange}
-                                        className="input"
-                                        placeholder="Enter password"
-                                    />
-                                    <span className="icon is-small is-left">
-                                        <i className="fas fa-lock"></i>
-                                    </span>
-                                    {submitted && !password && (
-                                        <p className="help is-danger">
-                                            Password is required
-                                        </p>
-                                    )}
-                                </div>
+                                <label className="label">
+                                    Password
+                                    <div className="control has-icons-left">
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            value={password}
+                                            onChange={handleChange}
+                                            className="input"
+                                            placeholder="Enter password"
+                                        />
+                                        <span className="icon is-small is-left">
+                                            <i className="fas fa-lock"></i>
+                                        </span>
+                                        {submitted && !password && (
+                                            <p className="help is-danger">
+                                                Password is required
+                                            </p>
+                                        )}
+                                    </div>
+                                </label>
                             </div>
+                            <br />
                             <div className="field is-grouped">
                                 <div className="control">
                                     <button
@@ -96,6 +102,7 @@ const Login = () => {
                                             'button is-link' +
                                             (loggingIn ? ' is-loading' : '')
                                         }
+                                        data-testid="LoginConfirm"
                                     >
                                         Login
                                     </button>
@@ -105,10 +112,11 @@ const Login = () => {
                                         className="button is-link is-light"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            history.push('/login');
+                                            history.push('/register');
                                         }}
+                                        data-testid="SignUpButton"
                                     >
-                                        Cancel
+                                        Sign Up
                                     </button>
                                 </div>
                             </div>

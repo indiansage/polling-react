@@ -62,11 +62,12 @@ const Register = () => {
     }
 
     return (
-        <div className="container is-fluid">
+        <div className="container is-fluid" data-testid="Register">
             <div className="columns">
                 <div className="column is-offset-3 is-6">
                     <div className="box login-box">
                         <h2 className="is-size-3">Register</h2>
+                        <div className="fade-rule" />
                         <br />
                         <form onSubmit={handleSubmit}>
                             <div className="field">

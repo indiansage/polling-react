@@ -13,16 +13,33 @@ $family-secondary: 'Montserrat Alternates', $family-sans-serif
 //file and select modules
 @import "node_modules/bulma/bulma"
 
+//NavBar.js
 .logo
     font-family: $family-primary
     color: #ffffff
     font-weight: 900
 
+.bottom-navbar
+    display: flex
+    //min-height: 15vh
+    justify-content: space-evenly
+    align-items: center
+
+@media (min-width: 1024px)
+    .bottom-navbar
+        display: none
+
+.bottom-navbar-item-loggedout
+    width: 50vw
+    text-align: center
+    padding: 1rem
+
 .burger-res
-    top: 0.4rem
+    top: 0
+    height: 4rem
 
 .fade-rule
-    height: 0.1px
+    height: 0.1rem
     background-color: $primary-light
     width: auto
     margin: 0 0
@@ -46,6 +63,10 @@ $family-secondary: 'Montserrat Alternates', $family-sans-serif
 //.login-box:hover
     //box-shadow: 5px 5px 10px 4px $primary-light, -5px -5px 10px 4px $primary-light
     //transform: translateY(-5px)
+
+@media (min-width: 768px)
+    .login-form
+        margin: 0 2rem
 
 .pill-form-header
     font-family: $family-primary

@@ -41,6 +41,7 @@ async function getAll() {
 }
 
 async function create(poll) {
+    console.log('req', poll);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeader() },
@@ -49,6 +50,7 @@ async function create(poll) {
     console.log('requestOptions', requestOptions);
 
     const response = await fetch(`${apiUrl}/polls/create`, requestOptions);
+    console.log('res', response);
     return handleResponse(response);
 }
 

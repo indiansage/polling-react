@@ -30,7 +30,7 @@ describe('<Register />', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    it('Renders div without crashing', () => {
+    it('Renders input elements without crashing', () => {
         const { getByLabelText } = render(
             <Provider store={configureStore(initialState)}>
                 <Router history={history}>
@@ -87,7 +87,7 @@ describe('<Register />', () => {
             isAdmin: false
         });
 
-        expect(getByText('Registration successful')).toBeInTheDocument();
+        expect(getByText('Registration successful!')).toBeInTheDocument();
         expect(getByTestId('Login')).toBeInTheDocument();
     });
 });

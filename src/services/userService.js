@@ -44,6 +44,7 @@ async function register(user) {
 }
 
 async function login(username, password) {
+    //console.log('req', username, password);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -55,8 +56,8 @@ async function login(username, password) {
         requestOptions
     );
     const user = await handleResponse(response);
-    // store user details and jwt token in local storage to keep user logged in between page refreshes
-    localStorage.setItem('user', JSON.stringify(user));
+    //console.log(user);
+
     return user;
 }
 

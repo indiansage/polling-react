@@ -13,6 +13,7 @@ const Alerts = () => {
             dispatch(alertActions.clear());
         });
     }, [dispatch, history]);
+    //alert.message && console.log('msg', alert.message);
     return (
         <div
             className="columns is-mobile"
